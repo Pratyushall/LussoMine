@@ -62,7 +62,7 @@ function AboutHero() {
             }}
           >
             About{" "}
-            <span className="text-transparent bg-gradient-to-r from-amber-400 via-pink-400 to-purple-400 bg-clip-text">
+            <span className="text-transparent bg-gradient-to-r from-amber-400 via-amber600-400 to-amber-800 bg-clip-text">
               LUSSO
             </span>
           </motion.h1>

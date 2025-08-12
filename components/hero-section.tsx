@@ -39,8 +39,8 @@ export default function HeroSection() {
       </div>
 
       {/* Animated Text */}
-      <div className="relative z-10 h-full flex items-center justify-center">
-        <div className="text-center space-y-6">
+      <div className="relative z-3  h-full flex items-center justify-center">
+        <div className="text-center space-y-2">
           {textLines.map((line, index) => (
             <motion.div
               key={index}

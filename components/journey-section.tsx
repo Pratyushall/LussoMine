@@ -49,7 +49,7 @@ export default function JourneySection() {
       description:
         "Fill out a quick form or give us a call — tell us about your dream kitchen or wardrobe.",
       icon: "",
-      color: "from-blue-500 to-cyan-500",
+      color: "from-amber-500 to-orange-500",
       voidColor: "rgba(59, 130, 246, 0.3)",
     },
     {
@@ -58,7 +58,7 @@ export default function JourneySection() {
       description:
         "Our experts get in touch to understand your space, style, and budget. We co-create the perfect design, just for you.",
       icon: "",
-      color: "from-purple-500 to-pink-500",
+      color: "from-amber-500 to-orange-500",
       voidColor: "rgba(147, 51, 234, 0.3)",
     },
     {
@@ -67,7 +67,7 @@ export default function JourneySection() {
       description:
         "Visit our Experience Center to explore materials, finishes, and modular layouts in person.",
       icon: "",
-      color: "from-emerald-500 to-teal-500",
+      color: "from-amber-500 to-orange-500",
       voidColor: "rgba(16, 185, 129, 0.3)",
     },
     {
@@ -85,7 +85,7 @@ export default function JourneySection() {
       description:
         "Sit back and relax — our team handles delivery and installation with care and precision.",
       icon: "",
-      color: "from-red-500 to-pink-500",
+      color: "from-amber-500 to-orange-500",
       voidColor: "rgba(239, 68, 68, 0.3)",
     },
     {
@@ -94,7 +94,7 @@ export default function JourneySection() {
       description:
         "Even after the work is done, we're just a call away for maintenance or upgrades.",
       icon: "",
-      color: "from-indigo-500 to-purple-500",
+      color: "from-amber-500 to-amber-500",
       voidColor: "rgba(99, 102, 241, 0.3)",
     },
   ];
@@ -132,7 +132,7 @@ export default function JourneySection() {
                   </label>
                   <input
                     type="text"
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:border-blue-400 focus:bg-white/15 transition-all duration-300"
+                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:border-amber-400 focus:bg-white/15 transition-all duration-300"
                     placeholder="Enter your first name"
                   />
                 </div>
@@ -142,7 +142,7 @@ export default function JourneySection() {
                   </label>
                   <input
                     type="text"
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:border-blue-400 focus:bg-white/15 transition-all duration-300"
+                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:border-amber-400 focus:bg-white/15 transition-all duration-300"
                     placeholder="Enter your last name"
                   />
                 </div>
@@ -210,7 +210,7 @@ export default function JourneySection() {
 
               <motion.button
                 type="submit"
-                className="w-full py-4 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-xl font-light tracking-wide hover:shadow-lg hover:shadow-blue-500/25 transition-all duration-300"
+                className="w-full py-4 bg-gradient-to-r from-amber-500 to-amber-800 text-white rounded-xl font-light tracking-wide hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
@@ -288,7 +288,7 @@ export default function JourneySection() {
 
             <div className="text-center pt-6">
               <motion.button
-                className="px-8 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-light tracking-wide"
+                className="px-8 py-3 bg-gradient-to-r from-amber-400 to-amber-500 text-white rounded-xl font-light tracking-wide"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
@@ -313,7 +313,7 @@ export default function JourneySection() {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <div className="space-y-6">
-                <div className="aspect-video bg-gradient-to-br from-emerald-500/20 to-teal-500/20 rounded-2xl flex items-center justify-center border border-white/10">
+                <div className="aspect-video bg-gradient-to-br from-amber-400/20 to-amber-500/20 rounded-2xl flex items-center justify-center border border-white/10">
                   <div className="text-center">
                     <div className="text-4xl mb-4">🏢</div>
                     <p className="text-white/70">Virtual Tour Available</p>
@@ -326,25 +326,25 @@ export default function JourneySection() {
                   </h4>
                   <div className="space-y-3">
                     <div className="flex items-center space-x-3">
-                      <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
+                      <div className="w-2 h-2 bg-amber-400 rounded-full"></div>
                       <span className="text-white/70 text-sm">
                         Full-scale kitchen and wardrobe displays
                       </span>
                     </div>
                     <div className="flex items-center space-x-3">
-                      <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
+                      <div className="w-2 h-2 bg-amber-400 rounded-full"></div>
                       <span className="text-white/70 text-sm">
                         Premium material library with 500+ samples
                       </span>
                     </div>
                     <div className="flex items-center space-x-3">
-                      <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
+                      <div className="w-2 h-2 bg-amber-400 rounded-full"></div>
                       <span className="text-white/70 text-sm">
                         Interactive technology demonstrations
                       </span>
                     </div>
                     <div className="flex items-center space-x-3">
-                      <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
+                      <div className="w-2 h-2 bg-amber-400 rounded-full"></div>
                       <span className="text-white/70 text-sm">
                         One-on-one expert consultations
                       </span>
@@ -408,7 +408,7 @@ export default function JourneySection() {
 
             <div className="text-center pt-6">
               <motion.button
-                className="px-8 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-xl font-light tracking-wide"
+                className="px-8 py-3 bg-gradient-to-r from-amber-400 to-amber-600 text-white rounded-xl font-light tracking-wide"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
@@ -821,7 +821,7 @@ export default function JourneySection() {
 
             <div className="text-center pt-6">
               <motion.button
-                className="px-8 py-3 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-xl font-light tracking-wide"
+                className="px-8 py-3 bg-gradient-to-r from-amber-400 to-amber-500 text-white rounded-xl font-light tracking-wide"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
@@ -883,7 +883,7 @@ export default function JourneySection() {
 
             {/* Central Void */}
             <motion.div
-              className="absolute inset-16 rounded-full bg-gradient-to-r from-slate-800 via-slate-900 to-slate-800 shadow-inner"
+              className="absolute inset-16 rounded-full bg-gradient-to-r from-amber-400 via-amber-600 to-amber-800 shadow-inner"
               animate={{
                 boxShadow: [
                   "inset 0 0 50px rgba(0,0,0,0.8)",
@@ -937,7 +937,7 @@ export default function JourneySection() {
 
       {/* Parallax Background Layer */}
       <motion.div className="absolute inset-0" style={{ y: backgroundY }}>
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-slate-800/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-amber-800/20 to-transparent" />
       </motion.div>
 
       <div className="max-w-6xl mx-auto px-6 relative z-10">
@@ -970,7 +970,7 @@ export default function JourneySection() {
               }}
             >
               Your Journey with{" "}
-              <span className="text-transparent bg-gradient-to-r from-amber-400 via-pink-400 to-purple-400 bg-clip-text">
+              <span className="text-transparent bg-gradient-to-r from-amber-400 via-amber-600 to-amber-700 bg-clip-text">
                 LUSSO
               </span>
             </motion.h2>
@@ -1052,7 +1052,7 @@ export default function JourneySection() {
                   }}
                 >
                   <motion.div
-                    className="absolute inset-2 rounded-full bg-gradient-to-r from-slate-700 to-slate-800"
+                    className="absolute inset-2 rounded-full bg-gradient-to-r from-amber-400 to-amber-600"
                     animate={
                       activeStep === index
                         ? {
@@ -1188,13 +1188,13 @@ export default function JourneySection() {
           transition={{ duration: 1, delay: 1.5 }}
         >
           <motion.button
-            className="relative px-10 py-4 bg-gradient-to-r from-slate-800 to-slate-700 text-white rounded-full font-light tracking-wide border border-white/20 overflow-hidden group"
+            className="relative px-10 py-4 bg-gradient-to-r from-amber-500 to-amber-700 text-white rounded-full font-light tracking-wide border border-white/20 overflow-hidden group"
             whileHover={{ scale: 1.05, y: -4 }}
             whileTap={{ scale: 0.95 }}
           >
             {/* Void Ripple Effect */}
             <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-amber-500/20 via-pink-500/20 to-purple-500/20 rounded-full opacity-0 group-hover:opacity-100"
+              className="absolute inset-0 bg-gradient-to-r from-amber-500/20 via-amber-800/20 to-amber-600/20 rounded-full opacity-0 group-hover:opacity-100"
               animate={{
                 scale: [1, 1.5, 1],
               }}

@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
+import Link from "next/link";
 
 export default function BrandsCollaborationSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -13,19 +14,19 @@ export default function BrandsCollaborationSection() {
       name: "Blum",
       category: "",
       description: "Exquisite craftsmanship meets timeless elegance",
-      logo: "/placeholder.svg?height=80&width=200&text=HERMÈS",
+      logo: "/images/blum.png",
     },
     {
       name: "Aristo",
       category: "",
       description: "Illuminating spaces with crystal perfection",
-      logo: "/placeholder.svg?height=80&width=200&text=BACCARAT",
+      logo: "/images/aristo.png",
     },
     {
       name: "Casantro",
       category: "",
       description: "Masterful Italian leather craftsmanship",
-      logo: "/placeholder.svg?height=80&width=200&text=POLTRONA+FRAU",
+      logo: "/images/casantro.png",
     },
   ];
 
@@ -95,7 +96,6 @@ export default function BrandsCollaborationSection() {
             prestigious brands to bring your luxury vision to life.
           </motion.p>
         </motion.div>
-
         {/* Brands Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
           {brands.map((brand, index) => (
@@ -129,7 +129,7 @@ export default function BrandsCollaborationSection() {
                     transition={{ duration: 0.3 }}
                   >
                     <img
-                      src={brand.logo || "/placeholder.svg"}
+                      src="/images/casantro.png"
                       alt={brand.name}
                       className="max-h-full max-w-full object-contain filter brightness-0 invert opacity-80 group-hover:opacity-100 transition-opacity duration-300"
                     />
@@ -210,7 +210,6 @@ export default function BrandsCollaborationSection() {
             </div>
           </motion.div>
         </div>
-
         {/* Call to Action */}
         <motion.div
           className="text-center"
@@ -218,22 +217,27 @@ export default function BrandsCollaborationSection() {
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 1, delay: 1.2 }}
         >
-          <motion.button
-            className="relative px-10 py-4 bg-gradient-to-r from-amber-500 via-pink-500 to-purple-500 text-white rounded-full font-light tracking-wide overflow-hidden group"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <motion.div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-amber-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            <span className="relative z-10 flex items-center gap-2">
-              Start Your Vision
-              <motion.span
-                animate={{ x: [0, 5, 0] }}
-                transition={{ repeat: Number.POSITIVE_INFINITY, duration: 1.5 }}
-              >
-                →
-              </motion.span>
-            </span>
-          </motion.button>
+          <Link href="/your-page">
+            <motion.button
+              className="relative px-10 py-4 bg-gradient-to-r from-amber-500 via-pink-500 to-purple-500 text-white rounded-full font-light tracking-wide overflow-hidden group"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <motion.div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-amber-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <span className="relative z-10 flex items-center gap-2">
+                Start Your Vision
+                <motion.span
+                  animate={{ x: [0, 5, 0] }}
+                  transition={{
+                    repeat: Number.POSITIVE_INFINITY,
+                    duration: 1.5,
+                  }}
+                >
+                  →
+                </motion.span>
+              </span>
+            </motion.button>
+          </Link>
         </motion.div>
       </div>
     </section>
