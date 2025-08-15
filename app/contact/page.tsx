@@ -4,14 +4,69 @@ import type React from "react";
 
 import { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
+import Link from "next/link";
+import Footer from "@/components/footer"; // <-- Footer
 
 export default function ContactPage() {
   return (
-    <div style={{ backgroundColor: "#0a1526" }} className="min-h-screen">
+    <div
+      style={{ backgroundColor: "#0a1526" }}
+      className="min-h-screen relative"
+    >
+      <TopRightMenu /> {/* <-- Menu */}
       <ContactHero />
       <ContactFormSection />
       <LocationsSection />
       <ContactInfoSection />
+      <Footer /> {/* <-- Footer at the bottom */}
+    </div>
+  );
+}
+
+/* ────────────────────────────────────────────────────────────
+   Top-right menu (same style as other pages)
+   ──────────────────────────────────────────────────────────── */
+function TopRightMenu() {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="fixed top-5 right-5 z-[80]">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="relative px-4 py-2 rounded-full border border-white/20 text-white/90 backdrop-blur-sm
+                   bg-white/5 hover:bg-white/10 transition"
+        aria-label="Open menu"
+      >
+        <span className="inline-flex items-center gap-2">
+          <span aria-hidden>☰</span>
+          <span>Menu</span>
+        </span>
+      </button>
+
+      {open && (
+        <nav className="mt-2 w-56 rounded-2xl overflow-hidden border border-white/15 bg-[#0a1526]/95 backdrop-blur-md shadow-xl">
+          {[
+            { label: "Home", href: "/" },
+            { label: "Products", href: "/products" },
+            { label: "Kitchens", href: "/kitchens" },
+            { label: "Wardrobes", href: "/wardrobes" },
+            { label: "Shutters", href: "/shutters" },
+            { label: "Partitions", href: "/partitions" },
+            { label: "Experience", href: "/experience" },
+            { label: "Start your vision", href: "/startvision" },
+            { label: "About", href: "/about" },
+            { label: "Contact", href: "/contact" },
+          ].map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="block px-4 py-3 text-white/80 hover:text-white hover:bg-white/5 transition"
+              onClick={() => setOpen(false)}
+            >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
+      )}
     </div>
   );
 }
@@ -29,10 +84,7 @@ function ContactHero() {
       <div className="absolute inset-0">
         <motion.div
           className="absolute top-20 left-10 w-96 h-96 bg-gradient-to-r from-green-500/10 to-teal-500/10 rounded-full blur-3xl"
-          animate={{
-            scale: [1, 1.2, 1],
-            rotate: [0, 180, 360],
-          }}
+          animate={{ scale: [1, 1.2, 1], rotate: [0, 180, 360] }}
           transition={{
             duration: 20,
             repeat: Number.POSITIVE_INFINITY,
@@ -107,10 +159,7 @@ function ContactFormSection() {
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >
   ) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   return (
@@ -257,8 +306,8 @@ function ContactFormSection() {
                 </div>
                 <div>
                   <h4 className="text-white font-light mb-1">Phone</h4>
-                  <p className="text-white/70">+1 (555) 123-LUSSO</p>
-                  <p className="text-white/70">+1 (555) 456-7890</p>
+                  <p className="text-white/70">+919497567844-LUSSO</p>
+                  <p className="text-white/70">+918456789011</p>
                 </div>
               </div>
 
@@ -279,8 +328,8 @@ function ContactFormSection() {
                 </div>
                 <div>
                   <h4 className="text-white font-light mb-1">Address</h4>
-                  <p className="text-white/70">123 Design District</p>
-                  <p className="text-white/70">New York, NY 10001</p>
+                  <p className="text-white/70">123 Lusso</p>
+                  <p className="text-white/70">Banjara Hills, Hyderabad</p>
                 </div>
               </div>
 
@@ -308,22 +357,10 @@ function LocationsSection() {
 
   const locations = [
     {
-      city: "New York",
-      address: "123 Design District, NY 10001",
-      phone: "+1 (555) 123-LUSSO",
-      image: "/placeholder.svg?height=300&width=400&text=New+York+Office",
-    },
-    {
-      city: "Los Angeles",
-      address: "456 Beverly Hills, CA 90210",
-      phone: "+1 (555) 456-LUSSO",
-      image: "/placeholder.svg?height=300&width=400&text=LA+Office",
-    },
-    {
-      city: "Miami",
-      address: "789 Ocean Drive, FL 33139",
-      phone: "+1 (555) 789-LUSSO",
-      image: "/placeholder.svg?height=300&width=400&text=Miami+Office",
+      city: "Hyderabad",
+      address: "Banjara Hills, Hyderabad",
+      phone: "+919497567844-LUSSO",
+      image: "/placeholder.svg?height=300&width=400&text=Hyderabad+Studio",
     },
   ];
 

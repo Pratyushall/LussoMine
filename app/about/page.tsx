@@ -1,17 +1,71 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
+import Link from "next/link";
 import Footer from "@/components/footer"; // <-- Import footer
 
 export default function AboutLussoPage() {
   return (
-    <div style={{ backgroundColor: "#0a1526" }} className="min-h-screen">
+    <div
+      style={{ backgroundColor: "#0a1526" }}
+      className="min-h-screen relative"
+    >
+      <TopRightMenu /> {/* <-- Menu in the top-right */}
       <AboutHero />
       <OurStorySection />
       <TeamSection />
       <ValuesSection />
       <AwardsSection />
+      <Footer /> {/* <-- Footer at the bottom */}
+    </div>
+  );
+}
+
+/* ────────────────────────────────────────────────────────────
+   Top-right menu (reuse this across pages or move to app/layout.tsx)
+   ──────────────────────────────────────────────────────────── */
+function TopRightMenu() {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="fixed top-5 right-5 z-[80]">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="relative px-4 py-2 rounded-full border border-white/20 text-white/90 backdrop-blur-sm
+                   bg-white/5 hover:bg-white/10 transition"
+        aria-label="Open menu"
+      >
+        <span className="inline-flex items-center gap-2">
+          <span aria-hidden>☰</span>
+          <span>Menu</span>
+        </span>
+      </button>
+
+      {open && (
+        <nav className="mt-2 w-56 rounded-2xl overflow-hidden border border-white/15 bg-[#0a1526]/95 backdrop-blur-md shadow-xl">
+          {[
+            { label: "Home", href: "/" },
+            { label: "Products", href: "/products" },
+            { label: "Kitchens", href: "/kitchens" },
+            { label: "Wardrobes", href: "/wardrobes" },
+            { label: "Shutters", href: "/shutters" },
+            { label: "Partitions", href: "/partitions" },
+            { label: "Experience", href: "/experience" },
+            { label: "Start your vision", href: "/startvision" },
+            { label: "About", href: "/about" },
+            { label: "Contact", href: "/contact" },
+          ].map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="block px-4 py-3 text-white/80 hover:text-white hover:bg-white/5 transition"
+              onClick={() => setOpen(false)}
+            >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
+      )}
     </div>
   );
 }
@@ -29,10 +83,7 @@ function AboutHero() {
       <div className="absolute inset-0">
         <motion.div
           className="absolute top-20 left-10 w-96 h-96 bg-gradient-to-r from-amber-500/10 to-pink-500/10 rounded-full blur-3xl"
-          animate={{
-            scale: [1, 1.2, 1],
-            rotate: [0, 180, 360],
-          }}
+          animate={{ scale: [1, 1.2, 1], rotate: [0, 180, 360] }}
           transition={{
             duration: 20,
             repeat: Number.POSITIVE_INFINITY,
@@ -63,7 +114,7 @@ function AboutHero() {
             }}
           >
             About{" "}
-            <span className="text-transparent bg-gradient-to-r from-amber-400 via-amber600-400 to-amber-800 bg-clip-text">
+            <span className="text-transparent bg-gradient-to-r from-amber-400 via-amber-600 to-amber-800 bg-clip-text">
               LUSSO
             </span>
           </motion.h1>

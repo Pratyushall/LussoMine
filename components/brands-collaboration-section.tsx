@@ -39,11 +39,8 @@ export default function BrandsCollaborationSection() {
       {/* Subtle Background Animation */}
       <div className="absolute inset-0">
         <motion.div
-          className="absolute top-1/2 left-1/2 w-96 h-96 bg-gradient-to-r from-amber-500/5 to-pink-500/5 rounded-full blur-3xl transform -translate-x-1/2 -translate-y-1/2"
-          animate={{
-            scale: [1, 1.2, 1],
-            rotate: [0, 180, 360],
-          }}
+          className="absolute top-1/2 left-1/2 w-96 h-96 bg-gradient-to-r from-amber-500/5 to-pink-500/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"
+          animate={{ scale: [1, 1.2, 1], rotate: [0, 180, 360] }}
           transition={{
             duration: 20,
             repeat: Number.POSITIVE_INFINITY,
@@ -92,10 +89,11 @@ export default function BrandsCollaborationSection() {
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 1, delay: 0.8 }}
           >
-            This is so possible with Lusso. We partner with the Nation's most
-            prestigious brands to bring your luxury vision to life.
+            This is so possible with Lusso. We partner with the Nation&apos;s
+            most prestigious brands to bring your luxury vision to life.
           </motion.p>
         </motion.div>
+
         {/* Brands Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
           {brands.map((brand, index) => (
@@ -129,8 +127,8 @@ export default function BrandsCollaborationSection() {
                     transition={{ duration: 0.3 }}
                   >
                     <img
-                      src="/images/casantro.png"
-                      alt={brand.name}
+                      src={brand.logo} // ✅ use the brand's own logo
+                      alt={`${brand.name} logo`}
                       className="max-h-full max-w-full object-contain filter brightness-0 invert opacity-80 group-hover:opacity-100 transition-opacity duration-300"
                     />
                   </motion.div>
@@ -140,9 +138,11 @@ export default function BrandsCollaborationSection() {
                     <h3 className="text-lg font-light text-white mb-2">
                       {brand.name}
                     </h3>
-                    <p className="text-sm text-amber-400 mb-2">
-                      {brand.category}
-                    </p>
+                    {brand.category ? (
+                      <p className="text-sm text-amber-400 mb-2">
+                        {brand.category}
+                      </p>
+                    ) : null}
                     <motion.p
                       className="text-xs text-gray-400 leading-relaxed"
                       initial={{ opacity: 0.7 }}
@@ -154,14 +154,16 @@ export default function BrandsCollaborationSection() {
                   </div>
                 </div>
 
-                {/* Animated Border - Fixed to avoid style conflicts */}
+                {/* Animated Border */}
                 {hoveredBrand === index && (
                   <motion.div
-                    className="absolute inset-0 rounded-2xl border-2 border-gradient-to-r from-amber-400/50 via-pink-400/50 to-purple-400/50"
+                    className="absolute inset-0 rounded-2xl"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.3 }}
                     style={{
+                      borderWidth: 2,
+                      borderStyle: "solid",
                       borderImageSource:
                         "linear-gradient(45deg, rgba(245,158,11,0.5), rgba(236,72,153,0.5), rgba(147,51,234,0.5))",
                       borderImageSlice: 1,
@@ -210,33 +212,44 @@ export default function BrandsCollaborationSection() {
             </div>
           </motion.div>
         </div>
-        {/* Call to Action */}
+
+        {/* Call to Action — SINGLE button linking to /startvision */}
         <motion.div
-          className="text-center"
-          initial={{ opacity: 0, y: 30 }}
+          className="text-center mt-16 relative z-[60]"
+          initial={{ opacity: 0, y: 50 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 1, delay: 1.2 }}
+          transition={{ duration: 1, delay: 0.4 }}
         >
-          <Link href="/your-page">
-            <motion.button
-              className="relative px-10 py-4 bg-gradient-to-r from-amber-500 via-pink-500 to-purple-500 text-white rounded-full font-light tracking-wide overflow-hidden group"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+          <Link href="/startvision" className="block">
+            <motion.div
+              role="button"
+              tabIndex={0}
+              className="inline-flex items-center justify-center px-10 py-4 rounded-full text-black font-medium tracking-wide
+                       bg-gradient-to-r from-amber-400 via-amber-500 to-amber-700
+                       hover:from-amber-300 hover:via-amber-500 hover:to-amber-800
+                       shadow-[0_8px_30px_rgba(251,191,36,0.25)] transition duration-300"
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
             >
+              {/* Hover sweep overlay */}
               <motion.div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-amber-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <span className="relative z-10 flex items-center gap-2">
-                Start Your Vision
-                <motion.span
-                  animate={{ x: [0, 5, 0] }}
-                  transition={{
-                    repeat: Number.POSITIVE_INFINITY,
-                    duration: 1.5,
-                  }}
-                >
-                  →
-                </motion.span>
-              </span>
-            </motion.button>
+              {/* Inner padding + white text */}
+              <div className="relative z-10 px-10 py-4 text-center">
+                <span className="flex items-center justify-center gap-2 text-white font-light tracking-wide">
+                  Start Your Vision
+                  <motion.span
+                    aria-hidden
+                    animate={{ x: [0, 5, 0] }}
+                    transition={{
+                      repeat: Number.POSITIVE_INFINITY,
+                      duration: 1.5,
+                    }}
+                  >
+                    →
+                  </motion.span>
+                </span>
+              </div>
+            </motion.div>
           </Link>
         </motion.div>
       </div>

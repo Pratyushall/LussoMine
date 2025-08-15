@@ -883,7 +883,7 @@ export default function JourneySection() {
 
             {/* Central Void */}
             <motion.div
-              className="absolute inset-16 rounded-full bg-gradient-to-r from-amber-400 via-amber-600 to-amber-800 shadow-inner"
+              className="absolute inset-16 rounded-full bg-gradient-to-r from-grey-100 via-white-200 to-black-300 shadow-inner"
               animate={{
                 boxShadow: [
                   "inset 0 0 50px rgba(0,0,0,0.8)",

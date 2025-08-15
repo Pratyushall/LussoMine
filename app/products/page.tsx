@@ -1,19 +1,83 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { motion, useInView, useScroll, useTransform } from "framer-motion";
+import { motion, useInView } from "framer-motion";
+import Link from "next/link";
+import Footer from "@/components/footer";
 
 export default function ProductsPage() {
   return (
-    <div style={{ backgroundColor: "#0a1526" }} className="min-h-screen">
+    <div
+      style={{ backgroundColor: "#0a1526" }}
+      className="min-h-screen relative"
+    >
+      {/* If you want this on EVERY page: move <TopRightMenu /> into app/layout.tsx */}
+      <TopRightMenu />
+
       <ProductsHero />
-      <ProductCategoriesSection />
-      <FeaturedProductsSection />
-      <CustomizationSection />
+      <QuiltGallery />
+
+      <Footer />
     </div>
   );
 }
 
+/* ────────────────────────────────────────────────────────────
+   Top-right menu (reusable)
+   ──────────────────────────────────────────────────────────── */
+function TopRightMenu() {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="fixed top-5 right-5 z-[80]">
+      <motion.button
+        onClick={() => setOpen((v) => !v)}
+        whileTap={{ scale: 0.96 }}
+        className="relative px-4 py-2 rounded-full border border-white/20 text-white/90 backdrop-blur-sm
+                   bg-white/5 hover:bg-white/10 transition"
+        aria-label="Open menu"
+      >
+        <span className="inline-flex items-center gap-2">
+          <span aria-hidden>☰</span>
+          <span>Menu</span>
+        </span>
+      </motion.button>
+
+      {open && (
+        <motion.div
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 6 }}
+          exit={{ opacity: 0, y: -8 }}
+          className="mt-2 w-56 rounded-2xl overflow-hidden border border-white/15 bg-[#0a1526]/95 backdrop-blur-md shadow-xl"
+        >
+          {[
+            { label: "Home", href: "/" },
+            { label: "Products", href: "/products" },
+            { label: "Kitchens", href: "/kitchens" },
+            { label: "Wardrobes", href: "/wardrobes" },
+            { label: "Shutters", href: "/shutters" },
+            { label: "Partitions", href: "/partitions" },
+            { label: "Experience", href: "/experience" },
+            { label: "Start your vision", href: "/startvision" },
+            { label: "Contact", href: "/contact" },
+          ].map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="block px-4 py-3 text-white/80 hover:text-white hover:bg-white/5 transition"
+              onClick={() => setOpen(false)}
+            >
+              {item.label}
+            </Link>
+          ))}
+        </motion.div>
+      )}
+    </div>
+  );
+}
+
+/* ────────────────────────────────────────────────────────────
+   Hero
+   ──────────────────────────────────────────────────────────── */
 function ProductsHero() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.3 });
@@ -21,366 +85,195 @@ function ProductsHero() {
   return (
     <section
       ref={sectionRef}
-      className="min-h-screen relative overflow-hidden flex items-center justify-center pt-20"
+      className="min-h-[64vh] md:min-h-[70vh] relative overflow-hidden flex items-center"
     >
-      {/* Animated Background */}
-      <div className="absolute inset-0">
-        <motion.div
-          className="absolute top-20 left-10 w-96 h-96 bg-gradient-to-r from-red-500/10 to-orange-500/10 rounded-full blur-3xl"
-          animate={{ scale: [1, 1.2, 1], rotate: [0, 180, 360] }}
-          transition={{
-            duration: 20,
-            repeat: Number.POSITIVE_INFINITY,
-            ease: "linear",
-          }}
-        />
-      </div>
+      {/* Soft ambient glows */}
+      <motion.div
+        className="absolute -top-16 -left-20 w-[28rem] h-[28rem] bg-gradient-to-r from-amber-400/10 to-pink-500/10 rounded-full blur-3xl"
+        animate={{ scale: [1, 1.15, 1], rotate: [0, 180, 360] }}
+        transition={{
+          duration: 24,
+          repeat: Number.POSITIVE_INFINITY,
+          ease: "linear",
+        }}
+      />
+      <motion.div
+        className="absolute -bottom-24 -right-24 w-[36rem] h-[36rem] bg-gradient-to-r from-red-400/10 to-orange-500/10 rounded-full blur-3xl"
+        animate={{ scale: [1, 1.12, 1], rotate: [0, -180, -360] }}
+        transition={{
+          duration: 28,
+          repeat: Number.POSITIVE_INFINITY,
+          ease: "linear",
+        }}
+      />
 
-      <div className="container mx-auto px-6 text-center relative z-10">
+      <div className="container mx-auto px-6 relative z-10">
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
+          className="max-w-3xl"
+          initial={{ opacity: 0, y: 40 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 1 }}
+          transition={{ duration: 0.9 }}
         >
-          <motion.h1
-            className="text-8xl font-thin text-white mb-8 tracking-tight"
-            animate={{
-              textShadow: [
-                "0 0 30px rgba(255,255,255,0.1)",
-                "0 0 60px rgba(255,255,255,0.2)",
-                "0 0 30px rgba(255,255,255,0.1)",
-              ],
-            }}
-            transition={{
-              duration: 4,
-              repeat: Number.POSITIVE_INFINITY,
-              ease: "easeInOut",
-            }}
-          >
+          <h1 className="text-6xl md:text-8xl font-thin text-white tracking-tight">
             Our{" "}
-            <span className="text-transparent bg-gradient-to-r from-red-400 via-orange-400 to-amber-400 bg-clip-text">
+            <span className="text-transparent bg-gradient-to-r from-amber-400 via-amber-600 to-amber-800 bg-clip-text">
               Products
             </span>
-          </motion.h1>
-
-          <motion.div
-            className="w-32 h-px bg-gradient-to-r from-transparent via-red-400 to-transparent mx-auto mb-8"
-            initial={{ scaleX: 0 }}
-            animate={isInView ? { scaleX: 1 } : {}}
-            transition={{ duration: 1.5, delay: 0.5 }}
-          />
-
-          <motion.p
-            className="text-xl text-white/70 max-w-3xl mx-auto leading-relaxed"
-            initial={{ opacity: 0, y: 30 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 1, delay: 0.8 }}
-          >
-            Discover our curated collection of luxury furniture, fixtures, and
-            finishes that define sophisticated living.
-          </motion.p>
+          </h1>
+          <div className="w-24 h-px bg-gradient-to-r from-transparent via-amber-400 to-transparent my-6" />
+          <p className="text-lg md:text-xl text-white/75 leading-relaxed">
+            Explore kitchens, wardrobes, shutters and partitions — curated from
+            the best B2B brands so you can mix, match & perfect.
+          </p>
         </motion.div>
       </div>
     </section>
   );
 }
 
-// SCROLL PANEL CATEGORY SECTION
-function ProductCategoriesSection() {
-  const categories = [
+/* ────────────────────────────────────────────────────────────
+   Quilt Gallery — 4 products, big amber frames, engaging hover
+   Layout:
+   [ Kitchens   ][ Wardrobes ]
+   [  Shutters  ][ Partitions ]
+   ──────────────────────────────────────────────────────────── */
+function QuiltGallery() {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
+
+  const cards = [
     {
       name: "Kitchens",
-      description:
-        "Gourmet kitchen solutions with premium appliances and custom cabinetry.",
-      image: "/placeholder.svg?height=1080&width=1920&text=Luxury+Kitchens",
+      href: "/kitchens",
+      blurb: "Islands, G, L & Galley — crafted for your flow.",
+      img: "/images/bohokit6.jpg", // replace with your real images
     },
     {
       name: "Wardrobes",
-      description: "Bespoke storage solutions designed for your lifestyle.",
-      image: "/placeholder.svg?height=1080&width=1920&text=Luxury+Wardrobes",
+      href: "/wardrobes",
+      blurb: "Walk-in, sliding, openable — boutique organization.",
+      img: "/images/openable13.png",
     },
     {
       name: "Shutters",
-      description:
-        "Designer window treatments that combine style with functionality.",
-      image: "/placeholder.svg?height=1080&width=1920&text=Designer+Shutters",
+      href: "/shutters",
+      blurb: "Light, privacy, and quiet — perfectly balanced.",
+      img: "/images/8.jpg",
     },
     {
       name: "Partitions",
-      description:
-        "Architectural elements that define and enhance your interior spaces.",
-      image: "/placeholder.svg?height=1080&width=1920&text=Room+Partitions",
+      href: "/partitions",
+      blurb: "Metal & glass, shelving, smart glass — define space.",
+      img: "/images/6.jpg",
     },
   ];
 
   return (
-    <section className="relative w-full">
-      {categories.map((category, index) => (
-        <ScrollPanel key={index} category={category} />
-      ))}
-    </section>
-  );
-}
-
-function ScrollPanel({
-  category,
-}: {
-  category: { name: string; description: string; image: string };
-}) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.5 });
-
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
-
-  const scale = useTransform(scrollYProgress, [0, 1], [1.2, 1]);
-  const opacity = useTransform(scrollYProgress, [0, 1], [0, 1]);
-
-  return (
-    <div
-      ref={ref}
-      className="h-screen w-full sticky top-0 flex items-center justify-center overflow-hidden"
-    >
-      <motion.div
-        className="absolute inset-0 z-0"
-        style={{
-          backgroundImage: `url(${category.image})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          scale,
-          opacity,
-        }}
-        transition={{ duration: 1 }}
-      />
-      <div className="absolute inset-0 bg-black/40 z-10" />
-      <motion.div
-        className="relative z-20 max-w-4xl text-center px-6"
-        initial={{ opacity: 0, y: 50 }}
-        animate={isInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 1 }}
-      >
-        <h2 className="text-6xl font-light text-white mb-4">{category.name}</h2>
-        <p className="text-white/70 text-lg">{category.description}</p>
-      </motion.div>
-    </div>
-  );
-}
-
-// Keep your FeaturedProductsSection and CustomizationSection below this
-// You don’t need to modify them unless you want to match styles
-
-function FeaturedProductsSection() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.3 });
-
-  const featuredProducts = [
-    {
-      name: "Executive Kitchen Island",
-      category: "Kitchen",
-      price: "From $15,000",
-      image: "/placeholder.svg?height=400&width=400&text=Kitchen+Island",
-      features: [
-        "Marble Countertop",
-        "Built-in Appliances",
-        "Custom Storage",
-        "LED Lighting",
-      ],
-    },
-    {
-      name: "Master Wardrobe System",
-      category: "Wardrobe",
-      price: "From $12,000",
-      image: "/placeholder.svg?height=400&width=400&text=Wardrobe+System",
-      features: [
-        "Walk-in Design",
-        "Soft-close Drawers",
-        "LED Interior",
-        "Mirror Panels",
-      ],
-    },
-    {
-      name: "Motorized Plantation Shutters",
-      category: "Shutters",
-      price: "From $800/sqm",
-      image: "/placeholder.svg?height=400&width=400&text=Plantation+Shutters",
-      features: [
-        "Smart Control",
-        "Premium Wood",
-        "Custom Finish",
-        "UV Protection",
-      ],
-    },
-    {
-      name: "Glass Room Divider",
-      category: "Partitions",
-      price: "From $2,500",
-      image: "/placeholder.svg?height=400&width=400&text=Glass+Divider",
-      features: [
-        "Tempered Glass",
-        "Minimal Frame",
-        "Sliding System",
-        "Privacy Options",
-      ],
-    },
-  ];
-
-  return (
-    <section ref={sectionRef} className="py-32 relative overflow-hidden">
-      <div className="container mx-auto px-6 relative z-10">
-        <motion.div
-          className="text-center mb-20"
-          initial={{ opacity: 0, y: 50 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 1 }}
-        >
-          <h2 className="text-5xl font-light text-white mb-6">
-            Featured Products
-          </h2>
-          <div className="w-24 h-px bg-gradient-to-r from-transparent via-amber-400 to-transparent mx-auto" />
-        </motion.div>
-
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {featuredProducts.map((product, index) => (
+    <section ref={sectionRef} className="relative pb-24 pt-6">
+      <div className="container mx-auto px-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 lg:gap-8">
+          {cards.map((c, i) => (
             <motion.div
-              key={index}
-              className="group"
-              initial={{ opacity: 0, y: 50 }}
+              key={c.name}
+              initial={{ opacity: 0, y: 24 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: index * 0.1 }}
+              transition={{ duration: 0.6, delay: i * 0.08 }}
+              className="group"
             >
-              <div className="relative mb-6 rounded-2xl overflow-hidden">
-                <img
-                  src={product.image || "/placeholder.svg"}
-                  alt={product.name}
-                  className="w-full aspect-square object-cover group-hover:scale-110 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                  <div className="flex flex-wrap gap-1">
-                    {product.features
-                      .slice(0, 2)
-                      .map((feature, featureIndex) => (
-                        <span
-                          key={featureIndex}
-                          className="px-2 py-1 bg-white/20 rounded text-xs text-white"
+              {/* Whole card is clickable */}
+              <Link href={c.href} className="block focus:outline-none">
+                {/* Amber frame */}
+                <div className="relative rounded-[28px] p-[12px] bg-gradient-to-br from-white-300 via-yellow-400 to-black-600">
+                  {/* subtle outer halo on hover */}
+                  <div className="pointer-events-none absolute -inset-3 rounded-[32px] bg-amber-400/0 blur-2xl transition-opacity duration-500 group-hover:bg-amber-400/15" />
+                  {/* Image container */}
+                  <div className="relative rounded-2xl overflow-hidden bg-white/5 ring-1 ring-white/10 aspect-[4/3] sm:aspect-[4/3] lg:aspect-[5/4]">
+                    <img
+                      src={
+                        c.img ||
+                        "/placeholder.svg?height=800&width=1200&text=Image"
+                      }
+                      alt={c.name}
+                      className="w-full h-full object-cover transition-transform duration-[900ms] group-hover:scale-[1.05]"
+                    />
+                    {/* sheen on hover */}
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-black/0 to-transparent opacity-70" />
+                    <motion.div
+                      className="pointer-events-none absolute inset-0 bg-[linear-gradient(115deg,transparent_0%,rgba(255,255,255,0.06)_30%,transparent_60%)]"
+                      initial={{ x: "-120%" }}
+                      animate={isInView ? { x: ["-120%", "120%"] } : {}}
+                      transition={{
+                        duration: 3.2,
+                        repeat: Number.POSITIVE_INFINITY,
+                        delay: i * 0.4,
+                      }}
+                    />
+                    {/* copy */}
+                    <div className="absolute bottom-0 left-0 right-0 p-5">
+                      <h3 className="text-2xl font-light text-white">
+                        {c.name}
+                      </h3>
+                      <p className="text-white/70 text-sm mt-1 max-w-[40ch]">
+                        {c.blurb}
+                      </p>
+
+                      {/* per-card button */}
+                      <span
+                        className="mt-4 inline-flex items-center justify-center px-5 py-2 rounded-full text-black text-sm font-medium
+                                   bg-gradient-to-r from-black-400 via-yellow-300 to-white-700
+                                   hover:from-amber-300 hover:via-amber-500 hover:to-amber-800
+                                   shadow-[0_10px_30px_rgba(251,191,36,0.25)] transition"
+                      >
+                        View {c.name}
+                        <motion.span
+                          aria-hidden
+                          className="ml-2"
+                          animate={{ x: [0, 6, 0] }}
+                          transition={{
+                            repeat: Number.POSITIVE_INFINITY,
+                            duration: 1.4,
+                          }}
                         >
-                          {feature}
-                        </span>
-                      ))}
+                          →
+                        </motion.span>
+                      </span>
+                    </div>
+
+                    {/* tiny accent corners (just enough drama) */}
+                    <div className="absolute inset-0 pointer-events-none">
+                      <div className="absolute top-0 left-0 w-8 h-8 border-t border-l border-amber-300/60" />
+                      <div className="absolute top-0 right-0 w-8 h-8 border-t border-r border-amber-300/60" />
+                      <div className="absolute bottom-0 left-0 w-8 h-8 border-b border-l border-amber-300/60" />
+                      <div className="absolute bottom-0 right-0 w-8 h-8 border-b border-r border-amber-300/60" />
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="space-y-2">
-                <p className="text-orange-400 text-sm">{product.category}</p>
-                <h3 className="text-xl font-light text-white">
-                  {product.name}
-                </h3>
-                <p className="text-white/60">{product.price}</p>
-              </div>
+              </Link>
             </motion.div>
           ))}
         </div>
-      </div>
-    </section>
-  );
-}
 
-function CustomizationSection() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.3 });
-
-  const customizationOptions = [
-    {
-      title: "Materials",
-      description: "Choose from premium woods, metals, glass, and stone",
-      icon: "🏗️",
-    },
-    {
-      title: "Finishes",
-      description: "Custom colors, textures, and protective coatings",
-      icon: "🎨",
-    },
-    {
-      title: "Hardware",
-      description: "Luxury handles, hinges, and mechanical systems",
-      icon: "⚙️",
-    },
-    {
-      title: "Technology",
-      description: "Smart home integration and automated features",
-      icon: "📱",
-    },
-  ];
-
-  return (
-    <section ref={sectionRef} className="py-32 relative overflow-hidden">
-      <div className="container mx-auto px-6 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 1 }}
-          >
-            <h2 className="text-5xl font-light text-white mb-8">
-              Complete Customization
-            </h2>
-            <p className="text-xl text-white/70 leading-relaxed mb-12">
-              Every LUSSO product is tailored to your exact specifications,
-              ensuring a perfect fit for your space and lifestyle.
-            </p>
-
-            <div className="grid md:grid-cols-2 gap-6">
-              {customizationOptions.map((option, index) => (
-                <motion.div
-                  key={index}
-                  className="p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-all duration-500"
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={isInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.8, delay: 0.3 + index * 0.1 }}
-                  whileHover={{ scale: 1.05 }}
-                >
-                  <div className="text-3xl mb-4">{option.icon}</div>
-                  <h3 className="text-lg font-light text-white mb-2">
-                    {option.title}
-                  </h3>
-                  <p className="text-white/70 text-sm">{option.description}</p>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-
-          <motion.div
-            className="relative"
-            initial={{ opacity: 0, x: 50 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 1, delay: 0.3 }}
-          >
-            <div className="aspect-square rounded-3xl overflow-hidden">
-              <img
-                src="/placeholder.svg?height=600&width=600&text=Customization+Process"
-                alt="Customization Process"
-                className="w-full h-full object-cover"
-              />
-            </div>
-          </motion.div>
+        {/* Optional: bottom tagline CTA */}
+        <div className="text-center mt-16">
+          <Link href="/startvision" className="inline-block">
+            <span
+              className="inline-flex items-center justify-center px-10 py-4 rounded-full text-black font-medium tracking-wide
+                         bg-gradient-to-r from-amber-400 via-amber-500 to-amber-700
+                         hover:from-amber-300 hover:via-amber-500 hover:to-amber-800
+                         shadow-[0_8px_30px_rgba(251,191,36,0.25)] transition duration-300"
+            >
+              Start your vision
+              <motion.span
+                aria-hidden
+                className="ml-2"
+                animate={{ x: [0, 6, 0] }}
+                transition={{ repeat: Number.POSITIVE_INFINITY, duration: 1.4 }}
+              >
+                →
+              </motion.span>
+            </span>
+          </Link>
         </div>
-
-        <motion.div
-          className="text-center mt-20"
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 1, delay: 1 }}
-        >
-          <motion.button
-            className="px-12 py-4 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-full font-light tracking-wide hover:shadow-lg hover:shadow-red-500/25 transition-all duration-300"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            Explore Customization Options
-          </motion.button>
-        </motion.div>
       </div>
     </section>
   );
