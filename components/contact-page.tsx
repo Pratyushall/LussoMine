@@ -257,8 +257,8 @@ function ContactFormSection() {
                 </div>
                 <div>
                   <h4 className="text-white font-light mb-1">Phone</h4>
-                  <p className="text-white/70">+1 (555) 123-LUSSO</p>
-                  <p className="text-white/70">+1 (555) 456-7890</p>
+                  <p className="text-white/70">+919490776654LUSSO</p>
+                  <p className="text-white/70">+918765987612</p>
                 </div>
               </div>
 
@@ -279,8 +279,10 @@ function ContactFormSection() {
                 </div>
                 <div>
                   <h4 className="text-white font-light mb-1">Address</h4>
-                  <p className="text-white/70">123 Design District</p>
-                  <p className="text-white/70">New York, NY 10001</p>
+                  <p className="text-white/70">123 Lusso</p>
+                  <p className="text-white/70">
+                    Banjara Hills, Hyderabad 500072
+                  </p>
                 </div>
               </div>
 
@@ -308,22 +310,10 @@ function LocationsSection() {
 
   const locations = [
     {
-      city: "New York",
-      address: "123 Design District, NY 10001",
-      phone: "+1 (555) 123-LUSSO",
-      image: "/placeholder.svg?height=300&width=400&text=New+York+Office",
-    },
-    {
-      city: "Los Angeles",
-      address: "456 Beverly Hills, CA 90210",
-      phone: "+1 (555) 456-LUSSO",
-      image: "/placeholder.svg?height=300&width=400&text=LA+Office",
-    },
-    {
-      city: "Miami",
-      address: "789 Ocean Drive, FL 33139",
-      phone: "+1 (555) 789-LUSSO",
-      image: "/placeholder.svg?height=300&width=400&text=Miami+Office",
+      city: "Hyderabad",
+      address: "Banjara Hills, Hyderabad",
+      phone: "+919497567844-LUSSO",
+      image: "/placeholder.svg?height=300&width=400&text=Hyderabad+Studio",
     },
   ];
 
