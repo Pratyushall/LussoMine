@@ -88,7 +88,6 @@ export default function BrandsCollaborationSection() {
               key={b.name}
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.45, delay: idx * 0.05 }}
               whileHover={{ rotate: 360 }}
               transition={{ duration: 1.2, ease: "easeInOut" }}
               className="rounded-xl border border-amber-200/30 
