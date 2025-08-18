@@ -38,7 +38,7 @@ export default function Header({ isScrolled }: HeaderProps) {
           whileTap={{ scale: 0.9 }}
         >
           <motion.div
-            animate={{ rotate: isMenuOpen ? 180 : 0 }}
+            animate={{ rotate: isMenuOpen ? 360 : 0 }}
             transition={{ duration: 0.3 }}
           >
             {isMenuOpen ? (
@@ -67,7 +67,7 @@ export default function Header({ isScrolled }: HeaderProps) {
               <Link key={item.href} href={item.href}>
                 <motion.button
                   onClick={() => setIsMenuOpen(false)}
-                  className="w-full text-left px-6 py-4 text-white hover:bg-gradient-to-r hover:from-white/5 hover:to-neutral-700/10 rounded-xl transition-all duration-400 text-base font-light tracking-wide relative overflow-hidden"
+                  className="w-full text-left px-6 py-4 text-white hover:bg-gradient-to-r hover:from-yellow/10 hover:to-neutral-700/10 rounded-xl transition-all duration-400 text-base font-light tracking-wide relative overflow-hidden"
                   initial={{ opacity: 0, x: -10 }}
                   animate={{
                     opacity: isMenuOpen ? 1 : 0,
@@ -118,7 +118,7 @@ export default function Header({ isScrolled }: HeaderProps) {
                 />
               </Link>
               <motion.div
-                className="w-24 h-px bg-gradient-to-r from-transparent via-white to-transparent mt-2 mx-auto"
+                className="w-50 h-px bg-gradient-to-r from-transparent via-white to-transparent mt-2 mx-auto"
                 initial={{ scaleX: 0 }}
                 animate={{ scaleX: 1 }}
                 transition={{ delay: 0.5, duration: 1 }}

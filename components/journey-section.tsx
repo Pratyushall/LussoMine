@@ -1179,47 +1179,6 @@ export default function JourneySection() {
             </motion.div>
           ))}
         </div>
-
-        {/* Void Portal CTA */}
-        <motion.div
-          className="text-center mt-24"
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 1, delay: 1.5 }}
-        >
-          <motion.button
-            className="relative px-10 py-4 bg-gradient-to-r from-amber-500 to-amber-700 text-white rounded-full font-light tracking-wide border border-white/20 overflow-hidden group"
-            whileHover={{ scale: 1.05, y: -4 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            {/* Void Ripple Effect */}
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-amber-500/20 via-amber-800/20 to-amber-600/20 rounded-full opacity-0 group-hover:opacity-100"
-              animate={{
-                scale: [1, 1.5, 1],
-              }}
-              transition={{
-                duration: 2,
-                repeat: Number.POSITIVE_INFINITY,
-                ease: "easeInOut",
-              }}
-            />
-
-            <span className="relative z-10 flex items-center gap-3">
-              Begin Your Journey
-              <motion.span
-                animate={{ rotate: [0, 360] }}
-                transition={{
-                  duration: 2,
-                  repeat: Number.POSITIVE_INFINITY,
-                  ease: "linear",
-                }}
-              >
-                ⚡
-              </motion.span>
-            </span>
-          </motion.button>
-        </motion.div>
       </div>
 
       {/* Modal Overlay */}

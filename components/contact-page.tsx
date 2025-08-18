@@ -166,7 +166,7 @@ function ContactFormSection() {
                   value={formData.phone}
                   onChange={handleInputChange}
                   className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:border-green-400 focus:bg-white/15 transition-all duration-300"
-                  placeholder="+1 (555) 123-4567"
+                  placeholder="+919490567843"
                 />
               </div>
 

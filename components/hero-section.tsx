@@ -15,13 +15,13 @@ export default function HeroSection() {
   const y3 = useTransform(scrollYProgress, [0, 1], [0, -200]);
   const y4 = useTransform(scrollYProgress, [0, 1], [0, -250]);
 
-  const textLines = ["Transforming visions into reality"];
+  const textLines = [""];
 
   return (
     <section
       ref={sectionRef}
       className="relative h-screen overflow-hidden"
-      style={{ backgroundColor: "#0a1526" }}
+      style={{ backgroundColor: "oklch(71.8% 0.202 349.761)" }}
     >
       {/* Video Background */}
       <div className="absolute inset-0 z-0">

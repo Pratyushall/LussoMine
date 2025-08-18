@@ -1,602 +1,142 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { motion, useInView } from "framer-motion";
-import Image from "next/image"; // ✅ REQUIRED
-import NextImage from "next/image";
+import { motion } from "framer-motion";
+import Image from "next/image";
+import Link from "next/link";
 
+/* -----------------------------
+   Reusable fullscreen hero
+------------------------------*/
+type HeroProps = {
+  href: string;
+  label: string;
+  index: string; // "01" / "02" / ...
+  src: string;
+};
+
+function FullscreenHero({ href, label, index, src }: HeroProps) {
+  return (
+    <motion.section
+      className="group relative w-full h-[100svh] min-h-screen overflow-hidden"
+      style={{ backgroundColor: "#0a1526" }}
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.25 }}
+      transition={{ duration: 0.7, ease: "easeOut" }}
+    >
+      {/* Background image */}
+      <Image
+        src={src}
+        alt={label}
+        fill
+        priority
+        className="object-cover"
+        sizes="100vw"
+      />
+
+      {/* Readability overlay */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/15 to-transparent" />
+
+      {/* Click layer — makes entire section clickable */}
+      <Link
+        href={href}
+        aria-label={`Go to ${label}`}
+        className="absolute inset-0 z-30 block"
+      />
+
+      {/* Content overlay (non-interactive so clicks hit the link below) */}
+      <div className="pointer-events-none relative z-20 h-full max-w-2xl mx-auto px-6 flex items-end pb-10 md:pb-14">
+        <div className="w-full">
+          <div className="text-white/45 text-xs md:text-sm tracking-[0.2em] mb-2">
+            {index}
+          </div>
+
+          <div className="flex items-center justify-between gap-4">
+            <h2 className="text-white font-light tracking-wide text-2xl md:text-3xl">
+              {label}
+            </h2>
+
+            {/* Fancy Explore pill (decorative; section itself is clickable) */}
+            <div className="hidden md:inline-flex relative items-center gap-2 text-amber-300/90 text-sm uppercase tracking-wider border border-amber-300/40 rounded-full px-3 py-1 overflow-hidden">
+              {/* shimmer sweep */}
+              <motion.span
+                className="absolute inset-y-0 -left-1/2 w-1/2 bg-gradient-to-r from-transparent via-amber-300/15 to-transparent"
+                initial={false}
+                animate={{ x: ["-100%", "200%"] }}
+                transition={{ duration: 2.2, repeat: Infinity, ease: "linear" }}
+              />
+              <span className="relative z-10">Explore</span>
+              <motion.svg
+                width="25"
+                height="25"
+                viewBox="0 0 24 24"
+                fill="none"
+                className="relative z-10 translate-y-[1px]"
+                animate={{ x: [0, 4, 0] }}
+                transition={{
+                  duration: 1.6,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              >
+                <path
+                  d="M5 12h14M13 5l7 7-7 7"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </motion.svg>
+            </div>
+          </div>
+
+          <div className="mt-3 h-[2px] w-14 bg-amber-400/90 rounded-full transition-all duration-500 group-hover:w-20" />
+        </div>
+      </div>
+
+      {/* Micro hover effect on the whole frame */}
+      <motion.div
+        className="absolute inset-0"
+        whileHover={{ scale: 1.01 }}
+        transition={{ duration: 0.4 }}
+      />
+    </motion.section>
+  );
+}
+
+/* -----------------------------
+   Page sections wrapper
+------------------------------*/
 export default function ProjectSections() {
   return (
-    <div style={{ backgroundColor: "#0a1526" }}>
-      <KitchensSection />
-      <WardrobesSection />
-      <ShuttersSection />
-      <PartitionsSection />
+    <div
+      className="flex flex-col gap-5 md:gap-11"
+      style={{ backgroundColor: "#0a1526" }}
+    >
+      <FullscreenHero
+        href="/kitchens"
+        label="Modular Kitchens"
+        index="01"
+        src="/images/kitchen11.png"
+      />
+      <FullscreenHero
+        href="/wardrobes"
+        label="Wardrobes"
+        index="02"
+        src="/images/wrd11.png"
+      />
+      <FullscreenHero
+        href="/shutters"
+        label="Shutters"
+        index="03"
+        src="/images/shut1.png"
+      />
+      <FullscreenHero
+        href="/partitions"
+        label="Partitions"
+        index="04"
+        src="/images/part11.png"
+      />
     </div>
-  );
-}
-
-/* =========================
-   Kitchens (Wardrobes clone)
-   ========================= */
-function KitchensSection() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.3 });
-  const [activeCard, setActiveCard] = useState<number>(0);
-
-  const KitchenTypes = [
-    {
-      title: "Island Kitchen",
-      desc: "Spacious luxury dressing rooms",
-      color: "from-blue-400 to-purple-600",
-    },
-    {
-      title: "G - Shape",
-      desc: "Seamlessly integrated storage",
-      color: "from-purple-400 to-pink-600",
-    },
-    {
-      title: "L - Shape",
-      desc: "Flexible and expandable",
-      color: "from-pink-400 to-red-600",
-    },
-    {
-      title: "Gallery Kitchen",
-      desc: "Flexible and expandable",
-      color: "from-pink-400 to-red-600",
-    },
-  ];
-
-  return (
-    <section
-      ref={sectionRef}
-      className="min-h-screen py-20 relative overflow-hidden"
-      style={{ backgroundColor: "#0a1526" }}
-    >
-      {/* Floating Geometric Shapes */}
-      <div className="absolute inset-0">
-        {[...Array(6)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-32 h-32 border border-white/10 rounded-lg"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-            animate={{ rotate: [0, 360], scale: [1, 1.2, 1] }}
-            transition={{
-              duration: 10 + i * 2,
-              repeat: Number.POSITIVE_INFINITY,
-              ease: "linear",
-            }}
-          />
-        ))}
-      </div>
-
-      <div className="container mx-auto px-6 relative z-10">
-        {/* Section Header */}
-        <motion.div
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: 50 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 1 }}
-        >
-          <motion.div
-            className="inline-block text-8xl font-thin text-white/10 mb-4"
-            initial={{ scale: 0.5 }}
-            animate={isInView ? { scale: 1 } : {}}
-            transition={{ duration: 1.2 }}
-          >
-            01
-          </motion.div>
-          <h2 className="text-6xl font-light text-transparent bg-gradient-to-r from-amber-400 via-amber-400 to-amber-800 bg-clip-text mb-6">
-            Kitchens
-          </h2>
-          <div className="w-32 h-px bg-gradient-to-r from-yellow-400 to-amber-400 mx-auto" />
-        </motion.div>
-
-        {/* Morphing Cards Layout */}
-        <div className="max-w-6xl mx-auto">
-          <div className="grid lg:grid-cols-3 gap-8 mb-12">
-            {KitchenTypes.map((type, index) => (
-              <motion.div
-                key={index}
-                className={`relative p-8 rounded-2xl cursor-pointer transition-all duration-500 ${
-                  activeCard === index ? "bg-white/10" : "bg-white/5"
-                }`}
-                initial={{ opacity: 0, y: 50 }}
-                animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ delay: index * 0.2, duration: 0.8 }}
-                onHoverStart={() => setActiveCard(index)}
-                whileHover={{ scale: 1.05, y: -10 }}
-              >
-                <motion.div
-                  className={`absolute inset-0 bg-gradient-to-br ${type.color} opacity-0 rounded-2xl`}
-                  animate={{ opacity: activeCard === index ? 0.1 : 0 }}
-                  transition={{ duration: 0.3 }}
-                />
-                <h3 className="text-2xl font-light text-white mb-4">
-                  {type.title}
-                </h3>
-                <p className="text-gray-400">{type.desc}</p>
-                <motion.div
-                  className={`absolute bottom-0 left-0 h-1 bg-gradient-to-r ${type.color} rounded-full`}
-                  initial={{ width: 0 }}
-                  animate={{ width: activeCard === index ? "100%" : "0%" }}
-                  transition={{ duration: 0.3 }}
-                />
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Central Image (replaces video) */}
-          <motion.figure
-            className="relative h-[28rem] md:h-[32rem] rounded-[28px]"
-            initial={{ opacity: 0, scale: 0.96, y: 24 }}
-            animate={isInView ? { opacity: 1, scale: 1, y: 0 } : {}}
-            transition={{ duration: 0.9, delay: 0.2 }}
-          >
-            {/* Amber gradient frame */}
-            <div className="relative h-full rounded-[28px] p-[2px] bg-gradient-to-r from-amber-300/40 via-amber-500/40 to-amber-700/40">
-              {/* Soft glow behind the frame (very subtle) */}
-              <div className="pointer-events-none absolute -inset-6 rounded-[32px] bg-amber-400/10 blur-3xl" />
-
-              {/* Image container */}
-              <div className="relative h-full rounded-[26px] overflow-hidden bg-white/5 ring-1 ring-white/10">
-                <Image
-                  src="/images/bohokit5.jpg" // string literal → TS is fine
-                  alt="Lusso kitchen — classic, refined, timeless"
-                  fill // ✅ Next 13+ supported
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 1200px"
-                  priority
-                />
-                {/* Gentle top fade for readability */}
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0a1526]/40 via-transparent to-transparent" />
-
-                {/* Minimal accent line at bottom */}
-                <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-[3px] bg-gradient-to-r from-amber-300/60 via-amber-500/60 to-amber-700/60" />
-              </div>
-            </div>
-          </motion.figure>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ===========================
-   Wardrobes (original source)
-   =========================== */
-function WardrobesSection() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.3 });
-  const [activeCard, setActiveCard] = useState<number>(0);
-
-  const wardrobeTypes = [
-    {
-      title: "Walk-in",
-      desc: "Spacious luxury dressing rooms",
-      color: "from-blue-400 to-purple-600",
-    },
-    {
-      title: "Sliding Wardrobes",
-      desc: "Seamlessly integrated storage",
-      color: "from-purple-400 to-pink-600",
-    },
-    {
-      title: "Openable Wardrobes",
-      desc: "Flexible and expandable",
-      color: "from-pink-400 to-red-600",
-    },
-  ];
-
-  return (
-    <section
-      ref={sectionRef}
-      className="min-h-screen py-20 relative overflow-hidden"
-      style={{ backgroundColor: "#0a1526" }}
-    >
-      {/* Floating Geometric Shapes */}
-      <div className="absolute inset-0">
-        {[...Array(6)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-32 h-32 border border-white/10 rounded-lg"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-            animate={{ rotate: [0, 360], scale: [1, 1.2, 1] }}
-            transition={{
-              duration: 10 + i * 2,
-              repeat: Number.POSITIVE_INFINITY,
-              ease: "linear",
-            }}
-          />
-        ))}
-      </div>
-
-      <div className="container mx-auto px-6 relative z-10">
-        {/* Section Header */}
-        <motion.div
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: 50 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 1 }}
-        >
-          <motion.div
-            className="inline-block text-8xl font-thin text-white/10 mb-4"
-            initial={{ scale: 0.5 }}
-            animate={isInView ? { scale: 1 } : {}}
-            transition={{ duration: 1.2 }}
-          >
-            02
-          </motion.div>
-          <h2 className="text-6xl font-light text-transparent bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-800 bg-clip-text mb-6">
-            Wardrobes
-          </h2>
-          {/* Tailwind doesn't have gold-400; using amber-400 to avoid errors */}
-          <div className="w-32 h-px bg-gradient-to-r from-yellow-400 to-amber-400 mx-auto" />
-        </motion.div>
-
-        {/* Morphing Cards Layout */}
-        <div className="max-w-6xl mx-auto">
-          <div className="grid lg:grid-cols-3 gap-8 mb-12">
-            {wardrobeTypes.map((type, index) => (
-              <motion.div
-                key={index}
-                className={`relative p-8 rounded-2xl cursor-pointer transition-all duration-500 ${
-                  activeCard === index ? "bg-white/10" : "bg-white/5"
-                }`}
-                initial={{ opacity: 0, y: 50 }}
-                animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ delay: index * 0.2, duration: 0.8 }}
-                onHoverStart={() => setActiveCard(index)}
-                whileHover={{ scale: 1.05, y: -10 }}
-              >
-                <motion.div
-                  className={`absolute inset-0 bg-gradient-to-br ${type.color} opacity-0 rounded-2xl`}
-                  animate={{ opacity: activeCard === index ? 0.1 : 0 }}
-                  transition={{ duration: 0.3 }}
-                />
-                <h3 className="text-2xl font-light text-white mb-4">
-                  {type.title}
-                </h3>
-                <p className="text-gray-400">{type.desc}</p>
-                <motion.div
-                  className={`absolute bottom-0 left-0 h-1 bg-gradient-to-r ${type.color} rounded-full`}
-                  initial={{ width: 0 }}
-                  animate={{ width: activeCard === index ? "100%" : "0%" }}
-                  transition={{ duration: 0.3 }}
-                />
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Central Image (replaces video) */}
-          <motion.figure
-            className="relative h-[28rem] md:h-[32rem] rounded-[28px]"
-            initial={{ opacity: 0, scale: 0.96, y: 24 }}
-            animate={isInView ? { opacity: 1, scale: 1, y: 0 } : {}}
-            transition={{ duration: 0.9, delay: 0.2 }}
-          >
-            {/* Amber gradient frame */}
-            <div className="relative h-full rounded-[28px] p-[2px] bg-gradient-to-r from-amber-300/40 via-amber-500/40 to-amber-700/40">
-              {/* Soft ambient glow */}
-              <div className="pointer-events-none absolute -inset-6 rounded-[32px] bg-amber-400/10 blur-3xl" />
-
-              {/* Image container */}
-              <div className="relative h-full rounded-[26px] overflow-hidden bg-white/5 ring-1 ring-white/10">
-                <NextImage
-                  src="/images/walkin9.png" // 👉 replace with your image
-                  alt="Lusso wardrobes — refined storage, timeless craft"
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 1200px"
-                  priority
-                />
-
-                {/* Gentle top fade */}
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0a1526]/40 via-transparent to-transparent" />
-
-                {/* Minimal accent line at bottom */}
-                <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-[3px] bg-gradient-to-r from-amber-300/60 via-amber-500/60 to-amber-700/60" />
-              </div>
-            </div>
-          </motion.figure>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* =========================
-   Shutters (Wardrobes clone)
-   ========================= */
-function ShuttersSection() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.3 });
-  const [activeCard, setActiveCard] = useState<number>(0);
-
-  const shutterTypes = [
-    {
-      title: "Panel Shutters",
-      desc: "Spacious luxury dressing rooms",
-      color: "from-blue-400 to-purple-600",
-    },
-    {
-      title: "Plantation Shutters",
-      desc: "Seamlessly integrated storage",
-      color: "from-purple-400 to-pink-600",
-    },
-    {
-      title: "Custom Shutters",
-      desc: "Flexible and expandable",
-      color: "from-pink-400 to-red-600",
-    },
-  ];
-
-  return (
-    <section
-      ref={sectionRef}
-      className="min-h-screen py-20 relative overflow-hidden"
-      style={{ backgroundColor: "#0a1526" }}
-    >
-      {/* Floating Geometric Shapes */}
-      <div className="absolute inset-0">
-        {[...Array(6)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-32 h-32 border border-white/10 rounded-lg"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-            animate={{ rotate: [0, 360], scale: [1, 1.2, 1] }}
-            transition={{
-              duration: 10 + i * 2,
-              repeat: Number.POSITIVE_INFINITY,
-              ease: "linear",
-            }}
-          />
-        ))}
-      </div>
-
-      <div className="container mx-auto px-6 relative z-10">
-        {/* Section Header */}
-        <motion.div
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: 50 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 1 }}
-        >
-          <motion.div
-            className="inline-block text-8xl font-thin text-white/10 mb-4"
-            initial={{ scale: 0.5 }}
-            animate={isInView ? { scale: 1 } : {}}
-            transition={{ duration: 1.2 }}
-          >
-            03
-          </motion.div>
-          <h2 className="text-6xl font-light text-transparent bg-gradient-to-r from-amber-400 via-amber-800 to-yellow-800 bg-clip-text mb-6">
-            Shutters
-          </h2>
-          <div className="w-32 h-px bg-gradient-to-r from-amber-400 to-amber-800 mx-auto" />
-        </motion.div>
-
-        {/* Morphing Cards Layout */}
-        <div className="max-w-6xl mx-auto">
-          <div className="grid lg:grid-cols-3 gap-8 mb-12">
-            {shutterTypes.map((type, index) => (
-              <motion.div
-                key={index}
-                className={`relative p-8 rounded-2xl cursor-pointer transition-all duration-500 ${
-                  activeCard === index ? "bg-white/10" : "bg-white/5"
-                }`}
-                initial={{ opacity: 0, y: 50 }}
-                animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ delay: index * 0.2, duration: 0.8 }}
-                onHoverStart={() => setActiveCard(index)}
-                whileHover={{ scale: 1.05, y: -10 }}
-              >
-                <motion.div
-                  className={`absolute inset-0 bg-gradient-to-br ${type.color} opacity-0 rounded-2xl`}
-                  animate={{ opacity: activeCard === index ? 0.1 : 0 }}
-                  transition={{ duration: 0.3 }}
-                />
-                <h3 className="text-2xl font-light text-white mb-4">
-                  {type.title}
-                </h3>
-                <p className="text-gray-400">{type.desc}</p>
-                <motion.div
-                  className={`absolute bottom-0 left-0 h-1 bg-gradient-to-r ${type.color} rounded-full`}
-                  initial={{ width: 0 }}
-                  animate={{ width: activeCard === index ? "100%" : "0%" }}
-                  transition={{ duration: 0.3 }}
-                />
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Central Image (replaces video) */}
-          <motion.figure
-            className="relative h-[28rem] md:h-[32rem] rounded-[28px]"
-            initial={{ opacity: 0, scale: 0.96, y: 24 }}
-            animate={isInView ? { opacity: 1, scale: 1, y: 0 } : {}}
-            transition={{ duration: 0.9, delay: 0.2 }}
-          >
-            {/* Amber gradient frame */}
-            <div className="relative h-full rounded-[28px] p-[2px] bg-gradient-to-r from-amber-300/40 via-amber-500/40 to-amber-700/40">
-              {/* Soft ambient glow */}
-              <div className="pointer-events-none absolute -inset-6 rounded-[32px] bg-amber-400/10 blur-3xl" />
-
-              {/* Image container */}
-              <div className="relative h-full rounded-[26px] overflow-hidden bg-white/5 ring-1 ring-white/10">
-                <NextImage
-                  src="/images/4.jpg" // 👉 replace with your image
-                  alt="Lusso shutters — crafted light and privacy"
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 1200px"
-                  priority
-                />
-
-                {/* Gentle top fade */}
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0a1526]/40 via-transparent to-transparent" />
-
-                {/* Minimal accent line at bottom */}
-                <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-[3px] bg-gradient-to-r from-amber-300/60 via-amber-500/60 to-amber-700/60" />
-              </div>
-            </div>
-          </motion.figure>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ============================
-   Partitions (Wardrobes clone)
-   ============================ */
-function PartitionsSection() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.3 });
-  const [activeCard, setActiveCard] = useState<number>(0);
-
-  const partitionTypes = [
-    {
-      title: "Shelving Partitions",
-      desc: "Spacious luxury dressing rooms",
-      color: "from-blue-400 to-purple-600",
-    },
-    {
-      title: "Smart Glass Partitions",
-      desc: "Seamlessly integrated storage",
-      color: "from-purple-400 to-pink-600",
-    },
-    {
-      title: "Metal Frame Partitons",
-      desc: "Flexible and expandable",
-      color: "from-pink-400 to-red-600",
-    },
-  ];
-
-  return (
-    <section
-      ref={sectionRef}
-      className="min-h-screen py-20 relative overflow-hidden"
-      style={{ backgroundColor: "#0a1526" }}
-    >
-      {/* Floating Geometric Shapes */}
-      <div className="absolute inset-0">
-        {[...Array(6)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-32 h-32 border border-white/10 rounded-lg"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-            animate={{ rotate: [0, 360], scale: [1, 1.2, 1] }}
-            transition={{
-              duration: 10 + i * 2,
-              repeat: Number.POSITIVE_INFINITY,
-              ease: "linear",
-            }}
-          />
-        ))}
-      </div>
-
-      <div className="container mx-auto px-6 relative z-10">
-        {/* Section Header */}
-        <motion.div
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: 50 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 1 }}
-        >
-          <motion.div
-            className="inline-block text-8xl font-thin text-white/10 mb-4"
-            initial={{ scale: 0.5 }}
-            animate={isInView ? { scale: 1 } : {}}
-            transition={{ duration: 1.2 }}
-          >
-            04
-          </motion.div>
-          <h2 className="text-6xl font-light text-transparent bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-800 bg-clip-text mb-6">
-            Partitions
-          </h2>
-          <div className="w-32 h-px bg-gradient-to-r from-amber-400 to-yellow-400 mx-auto" />
-        </motion.div>
-
-        {/* Morphing Cards Layout */}
-        <div className="max-w-6xl mx-auto">
-          <div className="grid lg:grid-cols-3 gap-8 mb-12">
-            {partitionTypes.map((type, index) => (
-              <motion.div
-                key={index}
-                className={`relative p-8 rounded-2xl cursor-pointer transition-all duration-500 ${
-                  activeCard === index ? "bg-white/10" : "bg-white/5"
-                }`}
-                initial={{ opacity: 0, y: 50 }}
-                animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ delay: index * 0.2, duration: 0.8 }}
-                onHoverStart={() => setActiveCard(index)}
-                whileHover={{ scale: 1.05, y: -10 }}
-              >
-                <motion.div
-                  className={`absolute inset-0 bg-gradient-to-br ${type.color} opacity-0 rounded-2xl`}
-                  animate={{ opacity: activeCard === index ? 0.1 : 0 }}
-                  transition={{ duration: 0.3 }}
-                />
-                <h3 className="text-2xl font-light text-white mb-4">
-                  {type.title}
-                </h3>
-                <p className="text-gray-400">{type.desc}</p>
-                <motion.div
-                  className={`absolute bottom-0 left-0 h-1 bg-gradient-to-r ${type.color} rounded-full`}
-                  initial={{ width: 0 }}
-                  animate={{ width: activeCard === index ? "100%" : "0%" }}
-                  transition={{ duration: 0.3 }}
-                />
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Central Image (replaces video) */}
-          <motion.figure
-            className="relative h-[28rem] md:h-[32rem] rounded-[28px]"
-            initial={{ opacity: 0, scale: 0.96, y: 24 }}
-            animate={isInView ? { opacity: 1, scale: 1, y: 0 } : {}}
-            transition={{ duration: 0.9, delay: 0.2 }}
-          >
-            {/* Amber gradient frame */}
-            <div className="relative h-full rounded-[28px] p-[2px] bg-gradient-to-r from-amber-300/40 via-amber-500/40 to-amber-700/40">
-              {/* Soft ambient glow */}
-              <div className="pointer-events-none absolute -inset-6 rounded-[32px] bg-amber-400/10 blur-3xl" />
-
-              {/* Image container */}
-              <div className="relative h-full rounded-[26px] overflow-hidden bg-white/5 ring-1 ring-white/10">
-                <NextImage
-                  src="/images/8.jpg" // 👉 replace with your image path
-                  alt="Lusso partitions — elegant space division"
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 1200px"
-                  priority
-                />
-
-                {/* Gentle top fade */}
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0a1526]/40 via-transparent to-transparent" />
-
-                {/* Minimal accent line at bottom */}
-                <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-[3px] bg-gradient-to-r from-amber-300/60 via-amber-500/60 to-amber-700/60" />
-              </div>
-            </div>
-          </motion.figure>
-        </div>
-      </div>
-    </section>
   );
 }

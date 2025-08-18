@@ -1,150 +1,196 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useInView, useScroll, useTransform } from "framer-motion";
+import { useEffect, useMemo, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import Link from "next/link";
-import { Playfair_Display } from "next/font/google";
 
-const playfair = Playfair_Display({
-  subsets: ["latin"],
-  variable: "--font-playfair",
-  display: "swap",
-});
+type Pillar = {
+  key: "love" | "excellence" | "wonder" | "poise";
+  title: string;
+  img: string;
+  hover: string; // 2-line teaser (we clamp it)
+  body: string; // dialog copy
+};
 
-export default function AboutSection() {
-  const sectionRef = useRef<HTMLElement | null>(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
+const PILLARS: Pillar[] = [
+  {
+    key: "love",
+    title: "Love",
+    img: "/images/ab1.jpg",
+    hover: "Morning coffee. Shared silence.",
+    body: "Morning coffee, shared silence, the soft steam folding into light. Love is the hush between sentences—the way a room warms when two people breathe in the same rhythm. It is the patience of a chair that keeps your shape, the cup that remembers the warmth of your hand. In these quiet geometries, a home learns your pulse and returns it—steady, familiar, kind.",
+  },
+  {
+    key: "excellence",
+    title: "Excellence",
+    img: "/images/ab2.jpg",
+    hover: "Discipline in detail. Ease in use.",
+    body: "We make things that release a quiet joy: precision hidden inside ease, edges tuned until the hand forgets to worry. Surfaces that keep the day light, fittings that move like breath. We choose for performance, we build for time, and sometimes—when the sun lands right—there is a faint fragrance of sunshine in the wood, a proof you can feel more than see.",
+  },
+  {
+    key: "wonder",
+    title: "Wonder",
+    img: "/images/ab3.jpg",
+    hover: "Light finds corners. Corners find light.",
+    body: "A drawer opening to a perfect quiet. A panel catching the afternoon like a held note. Wonder lives in the small inevitabilities—the moment something does exactly what you hoped, only smoother. Rooms become instruments, tuned to curiosity. You reach, and the house answers.",
+  },
+  {
+    key: "poise",
+    title: "Poise",
+    img: "/images/ab4.jpg",
+    hover: "Calm proportions. Certain pause.",
+    body: "Poise is not absence of movement—it is measured movement. Lines that stand without strain, materials that speak softly under light. The room holds itself the way a sentence holds meaning: balanced, breathing, unforced. You enter, and your shoulders lower. This is how stillness looks when it’s alive.",
+  },
+];
 
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
+export default function AboutLussoPillars() {
+  const [open, setOpen] = useState(false);
+  const [active, setActive] = useState<Pillar | null>(null);
 
-  // gentle parallax for the gallery strip
-  const yParallax = useTransform(scrollYProgress, [0, 1], [50, -50]);
+  // Close on ESC
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
 
-  // your images (we'll show first 4)
-  const gallery = [
-    "/images/Lshape5.png",
-    "/images/minimalkit3.jpg",
-    "/images/walkin4.png",
-    "/images/openable1.png",
-    "/images/gallery1.png",
-    "/images/island2.png",
-  ];
+  const onOpen = (p: Pillar) => {
+    setActive(p);
+    setOpen(true);
+  };
 
   return (
     <section
-      ref={sectionRef}
-      className="relative overflow-hidden py-32 min-h-screen"
+      className="relative overflow-hidden py-16 md:py-24"
       style={{ backgroundColor: "#0a1526" }}
     >
-      {/* ambient glows */}
-      <motion.div
-        className="absolute -top-10 -left-10 w-96 h-96 bg-white/5 rounded-full blur-3xl"
-        style={{ y: yParallax }}
-      />
-      <motion.div
-        className="absolute -bottom-16 -right-12 w-[34rem] h-[34rem] bg-white/5 rounded-full blur-3xl"
-        style={{ y: useTransform(yParallax, (v) => -v) }}
-      />
-
-      {/* heading */}
-      <div className="container mx-auto px-6 relative z-[60]">
-        <motion.div
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: 50 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 1 }}
-        >
-          <motion.h1
-            className={`${playfair.className} text-6xl md:text-8xl font-light text-white mb-8 tracking-tight`}
-            animate={{
-              textShadow: [
-                "0 0 30px rgba(255,255,255,0.12)",
-                "0 0 60px rgba(255,255,255,0.22)",
-                "0 0 30px rgba(255,255,255,0.12)",
-              ],
-            }}
-            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-          >
+      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+        {/* Title */}
+        <div className="text-center mb-10 md:mb-14">
+          <h2 className="text-3xl md:text-4xl font-light text-white">
             About{" "}
-            <span className="text-transparent font-light bg-gradient-to-r from-amber-400 via-amber-600 to-amber-800 bg-clip-text">
+            <span className="text-transparent bg-gradient-to-r from-yellow-200 via-amber-300 to-orange-300 bg-clip-text">
               LUSSO
             </span>
-          </motion.h1>
-
-          <div className="w-24 h-px bg-gradient-to-r from-transparent via-amber-400 to-transparent mx-auto" />
-          <p className="text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed">
-            We compose elegance out of beautiful chaos — layered, lived-in, and
-            irresistibly refined.
+          </h2>
+          <div className="w-20 h-px bg-gradient-to-r from-transparent via-amber-400 to-transparent mx-auto mt-3" />
+          <p className="text-sm md:text-base text-white/75 mt-4">
+            Four quiet words. One living philosophy.
           </p>
-        </motion.div>
-      </div>
+        </div>
 
-      {/* NEW: 4-up gallery with big gradient border (not clickable) */}
-      <motion.div
-        className="relative mx-auto max-w-6xl px-6"
-        style={{ y: yParallax }}
-        initial={{ opacity: 0, y: 30 }}
-        animate={isInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.9, delay: 0.15 }}
-      >
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-          {gallery.slice(0, 4).map((src, i) => (
-            <motion.figure
-              key={src}
-              className="relative group"
-              whileHover={{
-                y: -8,
-                scale: 1.02,
-                rotate: i % 2 === 0 ? -0.3 : 0.3,
-              }}
-              transition={{ type: "spring", stiffness: 220, damping: 18 }}
+        {/* Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
+          {PILLARS.map((p) => (
+            <button
+              key={p.key}
+              onClick={() => onOpen(p)}
+              className="group relative overflow-hidden aspect-[4/5] text-left"
+              aria-label={`${p.title}: open details`}
             >
-              {/* big amber/yellow gradient border */}
-              <div className="relative rounded-3xl p-[10px] md:p-[12px] bg-gradient-to-br from-white-300 via-white-400 to-amber-600">
-                {/* subtle outer glow on hover */}
-                <div className="pointer-events-none absolute -inset-3 rounded-[28px] bg-amber-400/0 blur-2xl transition-opacity duration-500 group-hover:bg-amber-400/20" />
-
-                {/* image container */}
-                <div className="relative rounded-2xl overflow-hidden bg-white/5 ring-1 ring-white/10 aspect-[4/5]">
-                  <Image
-                    src={src}
-                    alt={`Lusso gallery image ${i + 1}`}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 90vw, (max-width: 1024px) 40vw, 25vw"
-                    priority={i < 2}
-                  />
-                  {/* gentle top fade */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-500" />
+              {/* Image */}
+              <Image
+                src={p.img}
+                alt={p.title}
+                fill
+                sizes="(max-width: 768px) 95vw, (max-width: 1024px) 45vw, 22vw"
+                className="object-cover"
+                priority
+              />
+              {/* Hover veil */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/25 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              {/* Title */}
+              <div className="absolute left-0 right-0 bottom-0 p-4 md:p-5">
+                <div className="text-white text-lg md:text-xl font-light tracking-wide">
+                  {p.title}
                 </div>
+                <div
+                  className="text-white/85 text-xs md:text-sm mt-1"
+                  style={{
+                    display: "-webkit-box",
+                    WebkitBoxOrient: "vertical",
+                    WebkitLineClamp: 2,
+                    overflow: "hidden",
+                  }}
+                >
+                  {p.hover}
+                </div>
+                <div className="mt-2 h-[2px] w-10 md:w-12 bg-amber-400 rounded-full" />
               </div>
-            </motion.figure>
+              {/* Subtle lift */}
+              <div className="absolute inset-0 transition-transform duration-500 group-hover:scale-[1.02]" />
+            </button>
           ))}
         </div>
-      </motion.div>
+      </div>
 
-      {/* CTA */}
-      <motion.div
-        className="text-center mt-16 relative z-[60]"
-        initial={{ opacity: 0, y: 50 }}
-        animate={isInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 1, delay: 0.4 }}
-      >
-        <Link href="/experience" className="inline-block">
-          <span
-            className="inline-flex items-center justify-center px-10 py-4 rounded-full text-black font-medium tracking-wide
-                       bg-gradient-to-r from-amber-400 via-amber-500 to-amber-700
-                       hover:from-amber-300 hover:via-amber-500 hover:to-amber-800
-                       shadow-[0_8px_30px_rgba(251,191,36,0.25)] transition duration-300"
+      {/* Dialog */}
+      <AnimatePresence>
+        {open && active && (
+          <motion.div
+            role="dialog"
+            aria-modal="true"
+            aria-label={`${active.title} details`}
+            className="fixed inset-0 z-50"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
           >
-            Discover the Lusso Experience
-          </span>
-        </Link>
-      </motion.div>
+            {/* Backdrop click to close */}
+            <motion.div
+              className="absolute inset-0 bg-black/70"
+              onClick={() => setOpen(false)}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            />
+            {/* Panel with blurred BG image */}
+            <motion.div
+              className="relative z-10 mx-auto w-full max-w-3xl p-0 sm:p-2 md:p-4"
+              initial={{ scale: 0.98, y: 8, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.98, y: 8, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              <div className="relative overflow-hidden rounded-2xl border border-white/10 shadow-2xl">
+                {/* Blurred image background */}
+                <div className="absolute inset-0">
+                  <Image
+                    src={active.img}
+                    alt=""
+                    fill
+                    className="object-cover scale-110"
+                    sizes="100vw"
+                    priority
+                  />
+                  <div className="absolute inset-0 backdrop-blur-xl bg-black/40" />
+                </div>
+
+                {/* Content */}
+                <div className="relative p-6 md:p-8 max-h-[80vh] overflow-y-auto">
+                  <div className="flex items-start justify-between gap-6">
+                    <h3 className="text-2xl md:text-3xl font-light text-white">
+                      {active.title}
+                    </h3>
+                    <button
+                      onClick={() => setOpen(false)}
+                      className="shrink-0 text-white/80 hover:text-white rounded-md border border-white/20 px-3 py-1 text-sm"
+                    >
+                      Close
+                    </button>
+                  </div>
+
+                  <div className="mt-4 h-[2px] w-12 bg-amber-400/90 rounded-full" />
+
+                  <p className="mt-6 text-white/90 leading-relaxed text-base md:text-lg">
+                    {active.body}
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }

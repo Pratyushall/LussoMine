@@ -26,7 +26,7 @@ export default function Home() {
     <div
       ref={containerRef}
       className="text-white overflow-x-hidden"
-      style={{ backgroundColor: "#0a1526" }}
+      style={{ backgroundColor: "#7e4a35" }}
     >
       <Header isScrolled={isScrolled} />
       <HeroSection />
