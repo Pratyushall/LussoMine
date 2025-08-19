@@ -37,7 +37,6 @@ function TopRightMenu() {
       >
         <span className="inline-flex items-center gap-2">
           <span aria-hidden>☰</span>
-          <span>Menu</span>
         </span>
       </button>
 
@@ -46,12 +45,6 @@ function TopRightMenu() {
           {[
             { label: "Home", href: "/" },
             { label: "Products", href: "/products" },
-            { label: "Kitchens", href: "/kitchens" },
-            { label: "Wardrobes", href: "/wardrobes" },
-            { label: "Shutters", href: "/shutters" },
-            { label: "Partitions", href: "/partitions" },
-            { label: "Experience", href: "/experience" },
-            { label: "Start your vision", href: "/startvision" },
             { label: "About", href: "/about" },
             { label: "Contact", href: "/contact" },
           ].map((item) => (
@@ -182,7 +175,7 @@ function OurStorySection() {
           >
             <div className="aspect-square rounded-3xl overflow-hidden">
               <img
-                src="/images/pic1.png"
+                src="/images/abt1.png"
                 alt="Our Story"
                 className="w-full h-full object-cover"
               />
@@ -200,22 +193,19 @@ function TeamSection() {
 
   const team = [
     {
-      name: "Alessandro Rossi",
+      name: "Pranav Kondabathini",
       title: "Founder & Creative Director",
-      image: "/images/pic2.png",
-      bio: "With over 20 years of experience in luxury design, Alessandro brings European elegance to every project.",
+      image: "/images/prn.png",
     },
     {
-      name: "Sophia Chen",
+      name: "Shiva Pranav",
       title: "Head of Design",
-      image: "/images/pic3.png",
-      bio: "Sophia's innovative approach combines modern aesthetics with timeless functionality.",
+      image: "/images/prn.png",
     },
     {
-      name: "Marcus Williams",
+      name: "Pranav",
       title: "Project Director",
-      image: "/images/pic4.png",
-      bio: "Marcus ensures every project is delivered with precision, quality, and attention to detail.",
+      image: "/images/prn.png",
     },
   ];
 
@@ -252,7 +242,6 @@ function TeamSection() {
                 {member.name}
               </h3>
               <p className="text-amber-400 mb-4">{member.title}</p>
-              <p className="text-white/70 leading-relaxed">{member.bio}</p>
             </motion.div>
           ))}
         </div>

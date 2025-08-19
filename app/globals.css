@@ -113,6 +113,17 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+/* globals.css */
+.force-hero-bg {
+  position: relative;
+  min-height: 100svh;
+  background-image: url("/images/hero.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 0; /* creates a stacking context under the text */
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
