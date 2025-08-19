@@ -15,21 +15,21 @@ import Footer from "@/components/footer";
  * -------------------------------------------*/
 type Tile = { src: string; alt: string };
 
-type WardrobeType = {
-  key: "walkin" | "sliding" | "openable";
+type ShutterType = {
+  key: "hinged" | "bifold" | "sliding";
   label: string;
 };
 
-const WARDROBE_TYPES: WardrobeType[] = [
-  { key: "walkin", label: "Walk-in" },
+const SHUTTER_TYPES: ShutterType[] = [
+  { key: "hinged", label: "Hinged" },
+  { key: "bifold", label: "Bi-Fold" },
   { key: "sliding", label: "Sliding" },
-  { key: "openable", label: "Openable" },
 ];
 
 /* ---------------------------------------------
  * Page
  * -------------------------------------------*/
-export default function WardrobesPage() {
+export default function ShuttersPage() {
   return (
     <div
       style={{ backgroundColor: "#0a1526" }}
@@ -95,13 +95,13 @@ function Hero() {
         <div className="max-w-3xl">
           <h1 className="text-6xl md:text-8xl font-thin text-white tracking-tight">
             <span className="text-transparent bg-gradient-to-r from-amber-400 via-amber-600 to-amber-800 bg-clip-text">
-              Wardrobes
+              Shutters
             </span>
           </h1>
           <div className="w-24 h-px bg-gradient-to-r from-transparent via-amber-400 to-transparent my-6" />
           <p className="text-lg md:text-xl text-white/75 leading-relaxed">
-            Walk-in, sliding, and openable systems — boutique organization
-            tailored to you.
+            Hinged, bi-fold, and sliding shutters — crafted for light, privacy,
+            and presence.
           </p>
         </div>
       </div>
@@ -122,7 +122,7 @@ function TypesNav() {
     <section className="relative z-10">
       <div className="container mx-auto px-6">
         <div className="flex flex-wrap gap-3 md:gap-4 py-6 md:py-8">
-          {WARDROBE_TYPES.map((item) => (
+          {SHUTTER_TYPES.map((item) => (
             <button
               key={item.key}
               onClick={() => handleJump(`type-${item.key}`)}
@@ -149,36 +149,79 @@ function TypesNav() {
  * Sections per type — each = FULL-SCREEN framed slideshow
  * -------------------------------------------*/
 function TypesSections() {
-  const WALKIN: Tile[] = [
-    { src: "/images/wrdpp.png", alt: "Open shelving showcase" },
-    { src: "/images/walkina.jpg", alt: "Walk-in wardrobe with central island" },
-    { src: "/images/walkinb.jpg", alt: "Warm veneer walk-in" },
-    { src: "/images/walkinc.jpg", alt: "Walk-in with glass partitions" },
-    { src: "/images/walkine.jpg", alt: "Walk-in with mirrored doors" },
-    { src: "/images/walkinf.jpg", alt: "Boutique-style lighting" },
+  // Swap these placeholders for your real images (6 each recommended).
+  const HINGED: Tile[] = [
+    {
+      src: "/images/shutters-hinged1.jpg",
+      alt: "Hinged shutters, classic louvers",
+    },
+    { src: "/images/shutters-hinged2.jpg", alt: "Wide-panel hinged shutters" },
+    {
+      src: "/images/shutters-hinged3.jpg",
+      alt: "Hinged shutters with arch detail",
+    },
+    {
+      src: "/images/shutters-hinged4.jpg",
+      alt: "Matte white hinged shutters, bay window",
+    },
+    {
+      src: "/images/shutters-hinged5.jpg",
+      alt: "Walnut hinged shutters, living room",
+    },
+    {
+      src: "/images/shutters-hinged6.jpg",
+      alt: "Hinged shutters with brass hardware",
+    },
+  ];
+  const BIFOLD: Tile[] = [
+    {
+      src: "/images/shutters-bifold1.jpg",
+      alt: "Bi-fold shutters, airy opening",
+    },
+    { src: "/images/shutters-bifold2.jpg", alt: "Bi-fold plantation shutters" },
+    { src: "/images/shutters-bifold3.jpg", alt: "Bi-fold with tall panels" },
+    {
+      src: "/images/shutters-bifold4.jpg",
+      alt: "Textured finish bi-fold shutters",
+    },
+    {
+      src: "/images/shutters-bifold5.jpg",
+      alt: "Bi-fold shutters, modern frame",
+    },
+    {
+      src: "/images/shutters-bifold6.jpg",
+      alt: "Corner bi-fold shutters solution",
+    },
   ];
   const SLIDING: Tile[] = [
-    { src: "/images/wrdpp1.png", alt: "Handle-less graphite sliding" },
-    { src: "/images/slidinga.jpg", alt: "Sliding doors with bronze mirror" },
-    { src: "/images/slidingb.jpg", alt: "Floor-to-ceiling sliding panels" },
-    { src: "/images/slidingc.jpg", alt: "Sliding smoked glass fronts" },
-    { src: "/images/slidinge.jpg", alt: "Soft-close aluminum frames" },
-    { src: "/images/slidingf.jpg", alt: "Textured panel finishes" },
-  ];
-  const OPENABLE: Tile[] = [
-    { src: "/images/wrdpp2.png", alt: "Compact master hinged wardrobe" },
-    { src: "/images/open1.jpg", alt: "Openable wardrobe, matte finish" },
-    { src: "/images/open2.jpg", alt: "Minimal white hinged doors" },
-    { src: "/images/open3.jpg", alt: "Soft beige hinged wardrobe" },
-    { src: "/images/open5.jpg", alt: "Paneled classic doors" },
-    { src: "/images/open6.jpg", alt: "Hinged wardrobe with glass inlays" },
+    {
+      src: "/images/shutters-sliding1.jpg",
+      alt: "Sliding shutters, track system",
+    },
+    { src: "/images/shutters-sliding2.jpg", alt: "Wide-span sliding shutters" },
+    {
+      src: "/images/shutters-sliding3.jpg",
+      alt: "Sliding shutters with glass partition",
+    },
+    {
+      src: "/images/shutters-sliding4.jpg",
+      alt: "Dark timber sliding shutters",
+    },
+    {
+      src: "/images/shutters-sliding5.jpg",
+      alt: "Minimal sliding shutters, matte finish",
+    },
+    {
+      src: "/images/shutters-sliding6.jpg",
+      alt: "Outdoor sliding shutter screen",
+    },
   ];
 
   return (
     <>
-      <TypeBlock id="type-walkin" title="Walk-in" images={WALKIN} />
+      <TypeBlock id="type-hinged" title="Hinged" images={HINGED} />
+      <TypeBlock id="type-bifold" title="Bi-Fold" images={BIFOLD} />
       <TypeBlock id="type-sliding" title="Sliding" images={SLIDING} />
-      <TypeBlock id="type-openable" title="Openable" images={OPENABLE} />
     </>
   );
 }
@@ -200,10 +243,7 @@ function TypeBlock({
 }
 
 /* ---------------------------------------------
- * FullscreenWoodFrame
- * - Single textured brown frame (no white mat)
- * - Full viewport (100svh/100vw), zero container gutters
- * - Subtle bevel + grain; image fills inner area
+ * FullscreenWoodFrame (single textured brown frame)
  * -------------------------------------------*/
 function FullscreenWoodFrame({
   title,
@@ -214,14 +254,12 @@ function FullscreenWoodFrame({
   images: Tile[];
   intervalMs?: number;
 }) {
-  // frame thickness responsive
-  const FRAME = "clamp(18px, 3vw, 36px)";
+  const FRAME = "clamp(18px, 3vw, 36px)"; // responsive frame thickness
 
   return (
     <div
       className="relative h-[100svh] w-[100vw] overflow-hidden"
       style={{
-        // Textured wood: deep base + fine grain + vignette
         background: [
           "linear-gradient(135deg, #553318, #2b170a)",
           "repeating-linear-gradient(90deg, rgba(255,255,255,0.05) 0 2px, rgba(0,0,0,0.08) 2px 4px)",
@@ -234,20 +272,20 @@ function FullscreenWoodFrame({
         padding: FRAME,
       }}
     >
-      {/* Corner sheen / bevel hint */}
+      {/* Frame sheen / vignette */}
       <div
         className="pointer-events-none absolute inset-0"
         style={{ boxShadow: "inset 0 0 60px rgba(0,0,0,0.35)" }}
       />
 
-      {/* Title badge (overlay on the frame) */}
-      <div className="absolute top-15 left-10 z-20">
-        <span className="px-3 py-1 rounded-full text-2xl tracking-wide uppercase text-white/80 bg-white/10 border border-white/20 backdrop-blur-sm">
+      {/* Title badge */}
+      <div className="absolute top-4 left-6 z-20">
+        <span className="px-3 py-1 rounded-full text-xs tracking-wide uppercase text-white/80 bg-white/10 border border-white/20 backdrop-blur-sm">
           {title}
         </span>
       </div>
 
-      {/* Inner stage (just the slideshow, no extra brown/white) */}
+      {/* Slideshow stage */}
       <div className="relative h-full w-full rounded-[10px] overflow-hidden ring-1 ring-black/20 bg-black/20">
         <SlideshowCore images={images} intervalMs={intervalMs} />
       </div>
@@ -256,8 +294,7 @@ function FullscreenWoodFrame({
 }
 
 /* ---------------------------------------------
- * SlideshowCore (inside the frame)
- * - Autoplay (pause on hover), arrows, dots, keyboard, swipe
+ * SlideshowCore — autoplay, arrows, dots, keyboard, swipe
  * -------------------------------------------*/
 function SlideshowCore({
   images,
@@ -269,13 +306,20 @@ function SlideshowCore({
   const [idx, setIdx] = useState(0);
   const [paused, setPaused] = useState(false);
   const timerRef = useRef<number | null>(null);
-
-  // Swipe
   const touchStartX = useRef<number | null>(null);
 
   const next = () => setIdx((i) => (i + 1) % images.length);
   const prev = () => setIdx((i) => (i - 1 + images.length) % images.length);
   const goto = (i: number) => setIdx(i);
+
+  // Autoplay
+  useEffect(() => {
+    if (!images.length || paused) return;
+    timerRef.current = window.setInterval(next, intervalMs);
+    return () => {
+      if (timerRef.current) window.clearInterval(timerRef.current);
+    };
+  }, [images.length, paused, intervalMs]);
 
   // Keyboard
   useEffect(() => {
@@ -289,6 +333,7 @@ function SlideshowCore({
 
   if (!images?.length) return null;
 
+  // Swipe
   const onTouchStart = (e: ReactTouchEvent<HTMLDivElement>) => {
     touchStartX.current = e.touches[0]?.clientX ?? null;
   };
@@ -296,9 +341,7 @@ function SlideshowCore({
     const start = touchStartX.current;
     if (start == null) return;
     const dx = e.changedTouches[0]?.clientX - start;
-    if (Math.abs(dx) > 40) {
-      dx < 0 ? next() : prev();
-    }
+    if (Math.abs(dx) > 40) dx < 0 ? next() : prev();
     touchStartX.current = null;
   };
 
@@ -333,9 +376,9 @@ function SlideshowCore({
                 }`}
                 draggable={false}
               />
-              {/* Gentle vignettes to feel premium */}
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/45 via-transparent to-black/25" />
+              {/* Vignettes */}
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/45 via-black/10 to-transparent" />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/20" />
               {/* Caption */}
               <div className="absolute bottom-0 left-0 right-0 p-5 md:p-8">
                 <p className="text-white/90 text-sm md:text-base drop-shadow-[0_1px_1px_rgba(0,0,0,0.6)]">

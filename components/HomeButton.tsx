@@ -1,39 +1,47 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
 
-export default function HomeButton() {
+export default function HomeButton({
+  hideOnHome = false,
+}: {
+  hideOnHome?: boolean;
+}) {
+  const pathname = usePathname();
+  if (hideOnHome && (pathname === "/" || pathname === "/home")) return null;
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="fixed bottom-5 left-5 z-[95]"
+    <Link
+      href="/"
+      aria-label="Go to Home"
+      className="group fixed z-[95] pointer-events-auto"
+      style={{
+        position: "fixed",
+        // hard-pin to top-right and reset any legacy positioning
+        top: "max(0.75rem, env(safe-area-inset-top))",
+        left: "max(0.75rem, env(safe-area-inset-right))",
+        bottom: "auto",
+        right: "auto",
+      }}
     >
-      <Link href="/" aria-label="Go to Home" className="group">
-        <motion.span
-          whileTap={{ scale: 0.97 }}
-          className="inline-flex items-center gap-2 rounded-full px-4 py-2 md:px-5 md:py-2.5
-                     text-black bg-gradient-to-r from-amber-300 via-amber-500 to-rose-500
-                     shadow-[0_12px_36px_rgba(251,191,36,0.25)] ring-1 ring-white/25
-                     backdrop-blur-sm"
-        >
-          {/* Home icon (inline SVG) */}
-          <svg
-            viewBox="0 0 24 24"
-            className="h-5 w-5"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.6"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden
-          >
-            <path d="M3 10.5 12 3l9 7.5M5 11.5V21h5v-5h4v5h5v-9.5" />
-          </svg>
-          <span className="hidden sm:inline">Home</span>
-        </motion.span>
-      </Link>
-    </motion.div>
+      <span
+        className="block h-11 w-11 rounded-full overflow-hidden
+                   backdrop-blur-md bg-white/10 ring-1 ring-white/25
+                   shadow-[0_8px_30px_rgba(0,0,0,0.35)]
+                   transition-transform duration-200
+                   group-hover:scale-[1.03] group-active:scale-[0.97]"
+      >
+        <Image
+          src="/images/favicon.png" // Lusso favicon
+          alt="Lusso"
+          width={44}
+          height={44}
+          className="h-full w-full object-contain p-1.5"
+          priority={false}
+        />
+      </span>
+    </Link>
   );
 }
