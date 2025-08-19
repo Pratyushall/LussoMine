@@ -15,22 +15,21 @@ import Footer from "@/components/footer";
  * -------------------------------------------*/
 type Tile = { src: string; alt: string };
 
-type KitchenType = {
-  key: "islands" | "galley" | "lshape" | "gshape";
+type ShutterType = {
+  key: "hinged" | "bifold" | "sliding";
   label: string;
 };
 
-const KITCHEN_TYPES: KitchenType[] = [
-  { key: "islands", label: "Islands" },
-  { key: "galley", label: "Galley" },
-  { key: "lshape", label: "L-Shape" },
-  { key: "gshape", label: "G-Shape" },
+const SHUTTER_TYPES: ShutterType[] = [
+  { key: "hinged", label: "Hinged" },
+  { key: "bifold", label: "Bi-Fold" },
+  { key: "sliding", label: "Sliding" },
 ];
 
 /* ---------------------------------------------
  * Page
  * -------------------------------------------*/
-export default function KitchensPage() {
+export default function ShuttersPage() {
   return (
     <div
       style={{ backgroundColor: "#0a1526" }}
@@ -96,13 +95,13 @@ function Hero() {
         <div className="max-w-3xl">
           <h1 className="text-6xl md:text-8xl font-thin text-white tracking-tight">
             <span className="text-transparent bg-gradient-to-r from-amber-400 via-amber-600 to-amber-800 bg-clip-text">
-              Kitchens
+              Shutters
             </span>
           </h1>
           <div className="w-24 h-px bg-gradient-to-r from-transparent via-amber-400 to-transparent my-6" />
           <p className="text-lg md:text-xl text-white/75 leading-relaxed">
-            Islands, galley, L and G — crafted for daily theatre and effortless
-            flow.
+            Hinged, bi-fold, and sliding shutters — crafted for light, privacy,
+            and presence.
           </p>
         </div>
       </div>
@@ -123,7 +122,7 @@ function TypesNav() {
     <section className="relative z-10">
       <div className="container mx-auto px-6">
         <div className="flex flex-wrap gap-3 md:gap-4 py-6 md:py-8">
-          {KITCHEN_TYPES.map((item) => (
+          {SHUTTER_TYPES.map((item) => (
             <button
               key={item.key}
               onClick={() => handleJump(`type-${item.key}`)}
@@ -150,45 +149,79 @@ function TypesNav() {
  * Sections per type — each = FULL-SCREEN framed slideshow
  * -------------------------------------------*/
 function TypesSections() {
-  const ISLANDS: Tile[] = [
-    { src: "/images/herki.png", alt: "Stone waterfall edge island" },
-    { src: "/images/islanda.jpg", alt: "Island centerpiece with stone top" },
-    { src: "/images/islandb.jpg", alt: "Two-tone island with seating" },
-    { src: "/images/islandc.jpg", alt: "Warm wood island, brass accents" },
-    { src: "/images/islande.jpg", alt: "Monolithic island, matte finish" },
-    { src: "/images/islandf.jpg", alt: "Open-plan island with bar stools" },
+  // Swap these placeholders for your real images (6 each recommended).
+  const HINGED: Tile[] = [
+    {
+      src: "/images/shutters-hinged1.jpg",
+      alt: "Hinged shutters, classic louvers",
+    },
+    { src: "/images/shutters-hinged2.jpg", alt: "Wide-panel hinged shutters" },
+    {
+      src: "/images/shutters-hinged3.jpg",
+      alt: "Hinged shutters with arch detail",
+    },
+    {
+      src: "/images/shutters-hinged4.jpg",
+      alt: "Matte white hinged shutters, bay window",
+    },
+    {
+      src: "/images/shutters-hinged5.jpg",
+      alt: "Walnut hinged shutters, living room",
+    },
+    {
+      src: "/images/shutters-hinged6.jpg",
+      alt: "Hinged shutters with brass hardware",
+    },
   ];
-  const GALLEY: Tile[] = [
-    { src: "/images/herki1.png", alt: "High-contrast galley cabinetry" },
-    { src: "/images/gal1.jpg", alt: "Compact galley elegance" },
-    { src: "/images/gal2.jpg", alt: "Light & bright galley" },
-    { src: "/images/gal3.jpg", alt: "Galley with statement pendants" },
-    { src: "/images/gal5.jpg", alt: "Warm wood galley with brass" },
-    { src: "/images/gal6.jpg", alt: "Sleek galley, handle-less units" },
+  const BIFOLD: Tile[] = [
+    {
+      src: "/images/shutters-bifold1.jpg",
+      alt: "Bi-fold shutters, airy opening",
+    },
+    { src: "/images/shutters-bifold2.jpg", alt: "Bi-fold plantation shutters" },
+    { src: "/images/shutters-bifold3.jpg", alt: "Bi-fold with tall panels" },
+    {
+      src: "/images/shutters-bifold4.jpg",
+      alt: "Textured finish bi-fold shutters",
+    },
+    {
+      src: "/images/shutters-bifold5.jpg",
+      alt: "Bi-fold shutters, modern frame",
+    },
+    {
+      src: "/images/shutters-bifold6.jpg",
+      alt: "Corner bi-fold shutters solution",
+    },
   ];
-  const LSHAPE: Tile[] = [
-    { src: "/images/herki2.png", alt: "Matte L-shape with open shelving" },
-    { src: "/images/Lshp1.jpg", alt: "L-shape, warm wood" },
-    { src: "/images/Lshp2.jpg", alt: "L-shape, veneer + stone harmony" },
-    { src: "/images/Lshp3.jpg", alt: "Minimal L-shape with island vibe" },
-    { src: "/images/Lshp4.jpg", alt: "Bright L-shape, integrated lighting" },
-    { src: "/images/Lshp6.jpg", alt: "Elegant L-shape with tall units" },
-  ];
-  const GSHAPE: Tile[] = [
-    { src: "/images/herki3.png", alt: "G-shape, premium appliances" },
-    { src: "/images/gshp1.jpg", alt: "G-shape storage master" },
-    { src: "/images/gshp2.jpg", alt: "G-shape with family nook" },
-    { src: "/images/gshp3.jpg", alt: "Compact city G-shape" },
-    { src: "/images/gshp4.jpg", alt: "Wraparound G-shape, stone splash" },
-    { src: "/images/gshp6.jpg", alt: "G-shape, soft minimal palette" },
+  const SLIDING: Tile[] = [
+    {
+      src: "/images/shutters-sliding1.jpg",
+      alt: "Sliding shutters, track system",
+    },
+    { src: "/images/shutters-sliding2.jpg", alt: "Wide-span sliding shutters" },
+    {
+      src: "/images/shutters-sliding3.jpg",
+      alt: "Sliding shutters with glass partition",
+    },
+    {
+      src: "/images/shutters-sliding4.jpg",
+      alt: "Dark timber sliding shutters",
+    },
+    {
+      src: "/images/shutters-sliding5.jpg",
+      alt: "Minimal sliding shutters, matte finish",
+    },
+    {
+      src: "/images/shutters-sliding6.jpg",
+      alt: "Outdoor sliding shutter screen",
+    },
   ];
 
   return (
     <>
-      <TypeBlock id="type-islands" title="Islands" images={ISLANDS} />
-      <TypeBlock id="type-galley" title="Galley" images={GALLEY} />
-      <TypeBlock id="type-lshape" title="L-Shape" images={LSHAPE} />
-      <TypeBlock id="type-gshape" title="G-Shape" images={GSHAPE} />
+      <TypeBlock id="type-hinged" title="Hinged" images={HINGED} />
+      <TypeBlock id="type-bifold" title="Bi-Fold" images={BIFOLD} />
+      <TypeBlock id="type-sliding" title="Sliding" images={SLIDING} />
     </>
   );
 }
@@ -211,8 +244,6 @@ function TypeBlock({
 
 /* ---------------------------------------------
  * FullscreenWoodFrame (single textured brown frame)
- * - Full viewport (100svh/100vw)
- * - Subtle bevel + CSS grain texture
  * -------------------------------------------*/
 function FullscreenWoodFrame({
   title,
@@ -241,19 +272,20 @@ function FullscreenWoodFrame({
         padding: FRAME,
       }}
     >
+      {/* Frame sheen / vignette */}
       <div
         className="pointer-events-none absolute inset-0"
         style={{ boxShadow: "inset 0 0 60px rgba(0,0,0,0.35)" }}
       />
 
       {/* Title badge */}
-      <div className="absolute top-15 left-10 z-20">
-        <span className="px-3 py-1 rounded-full text-2xl tracking-wide uppercase text-white/80 bg-white/10 border border-white/20 backdrop-blur-sm">
+      <div className="absolute top-4 left-6 z-20">
+        <span className="px-3 py-1 rounded-full text-xs tracking-wide uppercase text-white/80 bg-white/10 border border-white/20 backdrop-blur-sm">
           {title}
         </span>
       </div>
 
-      {/* Inner stage */}
+      {/* Slideshow stage */}
       <div className="relative h-full w-full rounded-[10px] overflow-hidden ring-1 ring-black/20 bg-black/20">
         <SlideshowCore images={images} intervalMs={intervalMs} />
       </div>
@@ -262,8 +294,7 @@ function FullscreenWoodFrame({
 }
 
 /* ---------------------------------------------
- * SlideshowCore
- * - Autoplay (pause on hover), arrows, dots, keyboard, swipe
+ * SlideshowCore — autoplay, arrows, dots, keyboard, swipe
  * -------------------------------------------*/
 function SlideshowCore({
   images,
@@ -280,6 +311,15 @@ function SlideshowCore({
   const next = () => setIdx((i) => (i + 1) % images.length);
   const prev = () => setIdx((i) => (i - 1 + images.length) % images.length);
   const goto = (i: number) => setIdx(i);
+
+  // Autoplay
+  useEffect(() => {
+    if (!images.length || paused) return;
+    timerRef.current = window.setInterval(next, intervalMs);
+    return () => {
+      if (timerRef.current) window.clearInterval(timerRef.current);
+    };
+  }, [images.length, paused, intervalMs]);
 
   // Keyboard
   useEffect(() => {
