@@ -1,15 +1,22 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Footer from "@/components/footer";
+import { motion, useScroll, useTransform } from "framer-motion";
 
-type Tile = {
-  src: string;
-  alt: string;
-  ratio: "square" | "portrait" | "landscape";
-};
+/* ---------------------------------------------
+ * Types & Data
+ * -------------------------------------------*/
+type Tile = { src: string; alt: string };
+
+const KITCHEN_TYPES = [
+  { key: "islands", label: "Islands" },
+  { key: "galley", label: "Galley" },
+  { key: "lshape", label: "L-Shape" },
+  { key: "gshape", label: "G-Shape" },
+] as const;
 
 export default function KitchensPage() {
   return (
@@ -19,13 +26,14 @@ export default function KitchensPage() {
     >
       <TopRightMenu />
       <Hero />
-      <KitchensGallery />
+      <TypesNav />
+      <TypesSections />
       <Footer />
     </div>
   );
 }
 
-/* Top-right menu */
+/* Top-right menu (unchanged) */
 function TopRightMenu() {
   const [open, setOpen] = useState(false);
   return (
@@ -37,7 +45,6 @@ function TopRightMenu() {
       >
         <span className="inline-flex items-center gap-2">
           <span aria-hidden>☰</span>
-          <span>Menu</span>
         </span>
       </button>
 
@@ -46,12 +53,6 @@ function TopRightMenu() {
           {[
             { label: "Home", href: "/" },
             { label: "Products", href: "/products" },
-            { label: "Kitchens", href: "/kitchens" },
-            { label: "Wardrobes", href: "/wardrobes" },
-            { label: "Shutters", href: "/shutters" },
-            { label: "Partitions", href: "/partitions" },
-            { label: "Experience", href: "/experience" },
-            { label: "Start your vision", href: "/startvision" },
             { label: "Contact", href: "/contact" },
           ].map((item) => (
             <Link
@@ -93,221 +94,272 @@ function Hero() {
   );
 }
 
-/* Gallery (grid + aspect ratios, glassy frame) + Lightbox + Load more */
-function KitchensGallery() {
-  const allImages: Tile[] = useMemo(
-    () => [
-      {
-        src: "/images/minimalkit3.jpg",
-        alt: "Minimal island kitchen",
-        ratio: "landscape",
-      },
-      {
-        src: "/images/Lshape5.png",
-        alt: "L-shape kitchen, warm wood",
-        ratio: "landscape",
-      },
-      {
-        src: "/images/island2.png",
-        alt: "Stone island centerpiece",
-        ratio: "landscape",
-      },
-      {
-        src: "/images/gallery1.png",
-        alt: "Matte charcoal cabinetry",
-        ratio: "portrait",
-      },
-      {
-        src: "/images/bohokit1.jpg",
-        alt: "Handle-less gloss white",
-        ratio: "square",
-      },
-      {
-        src: "/images/bohokit2.jpg",
-        alt: "Warm oak & quartz",
-        ratio: "landscape",
-      },
-      {
-        src: "/images/kit11.jpg",
-        alt: "Compact galley elegance",
-        ratio: "portrait",
-      },
-      {
-        src: "/images/kit12.jpg",
-        alt: "Marble backsplash drama",
-        ratio: "square",
-      },
-      {
-        src: "/images/kit15.jpg",
-        alt: "G-shape storage master",
-        ratio: "landscape",
-      },
-      {
-        src: "/images/kit16.jpg",
-        alt: "Mixed metal accents",
-        ratio: "portrait",
-      },
-      // extra (revealed by Load more)
-      {
-        src: "/images/kit17.jpg",
-        alt: "Soft beige palette",
-        ratio: "square",
-      },
-      {
-        src: "/images/kit18.jpg",
-        alt: "Walnut + black stone",
-        ratio: "landscape",
-      },
-      {
-        src: "/images/gallery29.png",
-        alt: "Light & bright galley",
-        ratio: "portrait",
-      },
-      {
-        src: "/images/island3.png",
-        alt: "Two-tone cabinets",
-        ratio: "square",
-      },
-      {
-        src: "/images/island2.jpg",
-        alt: "Open shelves & brass",
-        ratio: "landscape",
-      },
-      {
-        src: "/images/kit12.jpg",
-        alt: "Textured panels",
-        ratio: "portrait",
-      },
-      {
-        src: "/images/kit13.jpg",
-        alt: "Statement pendant trio",
-        ratio: "landscape",
-      },
-      {
-        src: "/images/kit14.jpg",
-        alt: "Compact city kitchen",
-        ratio: "square",
-      },
-      {
-        src: "/images/kit15.jpg",
-        alt: "Veneer + stone harmony",
-        ratio: "landscape",
-      },
-      {
-        src: "/images/kit16.jpg",
-        alt: "Family breakfast nook",
-        ratio: "portrait",
-      },
-    ],
-    []
-  );
-
-  const [visible, setVisible] = useState(10);
-  const [lightboxOpen, setLightboxOpen] = useState(false);
-  const [index, setIndex] = useState(0);
-
-  const openAt = (i: number) => {
-    setIndex(i);
-    setLightboxOpen(true);
+/* -----------------------------------------------------------
+ * Types button row — click scrolls to sections below
+ * ---------------------------------------------------------*/
+function TypesNav() {
+  const handleJump = (id: string) => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
   };
-  const close = () => setLightboxOpen(false);
-  const next = () => setIndex((i) => (i + 1) % allImages.length);
-  const prev = () =>
-    setIndex((i) => (i - 1 + allImages.length) % allImages.length);
-
-  const canLoadMore = visible < allImages.length;
-
-  const ratioClass = (r: Tile["ratio"]) =>
-    r === "square"
-      ? "aspect-square"
-      : r === "portrait"
-      ? "aspect-[3/4]"
-      : "aspect-[16/10]";
 
   return (
-    <section className="relative pb-24 pt-6">
+    <section className="relative z-10">
       <div className="container mx-auto px-6">
-        {/* classy quilt grid (no masonry glitch) */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-          {allImages.slice(0, visible).map((tile, i) => (
-            <figure key={`${tile.src}-${i}`} className="group relative">
-              <button
-                type="button"
-                onClick={() => openAt(i)}
-                className="block w-full text-left"
-                aria-label={`Open ${tile.alt}`}
+        <div className="flex flex-wrap gap-3 md:gap-4 py-6 md:py-8">
+          {KITCHEN_TYPES.map((t) => (
+            <button
+              key={t.key}
+              onClick={() => handleJump(`type-${t.key}`)}
+              className="group px-5 md:px-6 py-2.5 md:py-3 rounded-full border border-white/20 text-white/90
+                         bg-white/5 hover:bg-white/10 hover:border-white/30 backdrop-blur-sm transition
+                         text-sm md:text-base"
+            >
+              <span className="align-middle">{t.label}</span>
+              <span
+                aria-hidden
+                className="ml-2 inline-block transition-transform group-hover:translate-x-1"
               >
-                {/* Glassy frame with reserved height via aspect ratio */}
-                <div
-                  className={`relative overflow-hidden rounded-2xl ${ratioClass(
-                    tile.ratio
-                  )}
-                                bg-white/5 backdrop-blur-sm ring-1 ring-white/10 hover:ring-white/20 transition`}
-                >
-                  {/* subtle inner edge */}
-                  <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-white/10 mix-blend-screen" />
-                  {/* image (Next/Image, fills container) */}
-                  <Image
-                    src={tile.src}
-                    alt={tile.alt}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    priority={i < 6}
-                  />
-                  {/* bottom wash + caption */}
-                  <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/40 via-black/0 to-transparent" />
-                  <figcaption className="absolute bottom-0 left-0 right-0 p-4">
-                    <p className="text-sm text-white/85">{tile.alt}</p>
-                  </figcaption>
-                </div>
-              </button>
-            </figure>
+                →
+              </span>
+            </button>
           ))}
         </div>
-
-        {/* Load more / Show less */}
-        <div className="text-center mt-12">
-          {canLoadMore ? (
-            <button
-              onClick={() =>
-                setVisible((v) => Math.min(v + 10, allImages.length))
-              }
-              className="px-8 py-3 rounded-full text-white font-light tracking-wide
-                         bg-white/10 border border-white/20 backdrop-blur-sm
-                         hover:bg-white/15 hover:border-white/30 transition"
-            >
-              Load more
-            </button>
-          ) : (
-            <button
-              onClick={() => setVisible(10)}
-              className="px-8 py-3 rounded-full text-black font-medium tracking-wide
-                         bg-gradient-to-r from-amber-400 via-amber-500 to-amber-700
-                         hover:from-amber-300 hover:via-amber-500 hover:to-amber-800
-                         shadow-[0_8px_30px_rgba(251,191,36,0.25)] transition"
-            >
-              Show less
-            </button>
-          )}
-        </div>
       </div>
-
-      {/* Lightbox Modal (slideshow) */}
-      <Lightbox
-        open={lightboxOpen}
-        images={allImages}
-        index={index}
-        onClose={close}
-        onPrev={prev}
-        onNext={next}
-        setIndex={setIndex}
-      />
     </section>
   );
 }
 
-/* Lightbox with arrows + keyboard navigation */
+/* -----------------------------------------------------------
+ * Sections per type — each has a stacked-overlap scroller
+ * + Lightbox per type (full-screen)
+ * ---------------------------------------------------------*/
+function TypesSections() {
+  const ISLANDS: Tile[] = [
+    { src: "/images/islanda.jpg", alt: "Island centerpiece with stone top" },
+    { src: "/images/islandb.jpg", alt: "Two-tone island with seating" },
+    { src: "/images/islandc.jpg", alt: "Warm wood island, brass accents" },
+  ];
+  const GALLEY: Tile[] = [
+    { src: "/images/gal1.jpg", alt: "Compact galley elegance" },
+    { src: "/images/gal2.jpg", alt: "Light & bright galley" },
+    { src: "/images/gal3.jpg", alt: "Galley with statement pendants" },
+  ];
+  const LSHAPE: Tile[] = [
+    { src: "/images/Lshp1.jpg", alt: "L-shape, warm wood" },
+    { src: "/images/Lshp2.jpg", alt: "L-shape, veneer + stone harmony" },
+    { src: "/images/Lshp3.jpg", alt: "Minimal L-shape with island vibe" },
+  ];
+  const GSHAPE: Tile[] = [
+    { src: "/images/gshp1.jpg", alt: "G-shape storage master" },
+    { src: "/images/gshp2.jpg", alt: "G-shape with family nook" },
+    { src: "/images/gshp3.jpg", alt: "Compact city G-shape" },
+  ];
+
+  return (
+    <div className="mt-2 md:mt-4">
+      <TypeBlock
+        id="type-islands"
+        title="Islands"
+        blurb="A stage at the heart of the home."
+        tiles={ISLANDS}
+      />
+      <TypeBlock
+        id="type-galley"
+        title="Galley"
+        blurb="Slim, efficient, and beautifully linear."
+        tiles={GALLEY}
+      />
+      <TypeBlock
+        id="type-lshape"
+        title="L-Shape"
+        blurb="Cornered for comfort, open for flow."
+        tiles={LSHAPE}
+      />
+      <TypeBlock
+        id="type-gshape"
+        title="G-Shape"
+        blurb="Wraparound utility with graceful reach."
+        tiles={GSHAPE}
+      />
+    </div>
+  );
+}
+
+function TypeBlock({
+  id,
+  title,
+  blurb,
+  tiles,
+}: {
+  id: string;
+  title: string;
+  blurb: string;
+  tiles: Tile[];
+}) {
+  // Lightbox state for this type
+  const [open, setOpen] = useState(false);
+  const [index, setIndex] = useState(0);
+
+  const openAt = (i: number) => {
+    setIndex(i);
+    setOpen(true);
+  };
+
+  const next = () => setIndex((i) => (i + 1) % tiles.length);
+  const prev = () => setIndex((i) => (i - 1 + tiles.length) % tiles.length);
+
+  return (
+    <section id={id} className="relative py-14 md:py-20">
+      <div className="container mx-auto px-6">
+        <header className="mb-6 md:mb-8">
+          <h2 className="text-4xl md:text-6xl font-light tracking-tight text-white">
+            {title}
+          </h2>
+          <p className="text-white/70 mt-2">{blurb}</p>
+        </header>
+
+        <StackScroller tiles={tiles} onOpen={openAt} />
+
+        <Lightbox
+          open={open}
+          images={tiles}
+          index={index}
+          onClose={() => setOpen(false)}
+          onPrev={prev}
+          onNext={next}
+          setIndex={setIndex}
+          title={title}
+        />
+      </div>
+    </section>
+  );
+}
+
+/* ---------------------------------------------
+ * RevealCard (scroll-linked reveal)
+ * -------------------------------------------*/
+const RevealCard = ({
+  i,
+  src,
+  alt,
+  onClick,
+}: {
+  i: number;
+  src: string;
+  alt: string;
+  onClick: () => void;
+}) => {
+  const ref = useRef<HTMLButtonElement>(null); // ✅ fixed
+
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start 80%", "end 20%"],
+  });
+
+  const clipPath = useTransform(
+    scrollYProgress,
+    [0, 1],
+    ["inset(0% 0% 35% 0%)", "inset(0% 0% 0% 0%)"]
+  );
+  const scale = useTransform(scrollYProgress, [0, 1], [0.99, 1]);
+  const glossY = useTransform(scrollYProgress, [0, 1], ["60%", "-20%"]);
+
+  return (
+    <motion.button
+      ref={ref}
+      type="button"
+      onClick={onClick}
+      aria-label={`Open ${alt}`}
+      className="block w-full text-left"
+      style={{ scale }}
+    >
+      <div
+        className="relative overflow-hidden rounded-3xl ring-1 ring-white/15 bg-white/5 backdrop-blur-sm shadow-[0_30px_80px_rgba(0,0,0,0.45)]"
+        style={{ height: "calc(100svh - 140px)" }}
+      >
+        <motion.div className="absolute inset-0" style={{ clipPath }}>
+          <Image
+            src={src}
+            alt={alt}
+            fill
+            className="object-cover"
+            sizes="100vw"
+            priority={i === 0}
+          />
+        </motion.div>
+
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/45 via-black/10 to-transparent" />
+
+        <motion.div
+          className="pointer-events-none absolute left-0 right-0 h-48 bg-[linear-gradient(180deg,rgba(255,255,255,0.14),rgba(255,255,255,0))]"
+          style={{ top: glossY }}
+        />
+
+        <div className="absolute bottom-0 left-0 right-0 p-5 md:p-8">
+          <p className="text-white/90 text-sm md:text-base">{alt}</p>
+        </div>
+
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-black/55 via-black/0 to-transparent" />
+      </div>
+    </motion.button>
+  );
+};
+
+/* ---------------------------------------------
+ * Stacked scroller: “one stands over the next”
+ * Click opens lightbox
+ * -------------------------------------------*/
+function StackScroller({
+  tiles,
+  onOpen,
+}: {
+  tiles: { src: string; alt: string }[];
+  onOpen: (index: number) => void;
+}) {
+  const overlapVH = 72; // how much the next card starts under the previous
+  const stickyTop = 80; // px from top when pinned (room for nav)
+
+  return (
+    <div className="relative">
+      {/* spacer to allow the stack to scroll fully */}
+      <div
+        aria-hidden
+        className="absolute left-0 right-0"
+        style={{
+          top: 0,
+          height: `calc(${tiles.length * overlapVH}vh + 30vh)`,
+        }}
+      />
+
+      <div className="relative">
+        {tiles.map((t, i) => (
+          <figure
+            key={t.src + i}
+            className="relative"
+            style={{
+              marginTop: i === 0 ? 0 : `-${overlapVH - 8}vh`, // leave a small peek
+              zIndex: tiles.length - i, // earlier image above later ones
+            }}
+          >
+            <div className="sticky" style={{ top: stickyTop }}>
+              <RevealCard
+                i={i}
+                src={t.src}
+                alt={t.alt}
+                onClick={() => onOpen(i)}
+              />
+            </div>
+          </figure>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ---------------------------------------------
+ * Full-screen Lightbox (with arrows + keyboard)
+ * -------------------------------------------*/
 function Lightbox({
   open,
   images,
@@ -316,6 +368,7 @@ function Lightbox({
   onPrev,
   onNext,
   setIndex,
+  title,
 }: {
   open: boolean;
   images: Tile[];
@@ -324,9 +377,11 @@ function Lightbox({
   onPrev: () => void;
   onNext: () => void;
   setIndex: (i: number) => void;
+  title?: string;
 }) {
   const overlayRef = useRef<HTMLDivElement>(null);
 
+  // body scroll lock + keyboard controls
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
@@ -344,6 +399,7 @@ function Lightbox({
   }, [open, onClose, onNext, onPrev]);
 
   if (!open) return null;
+
   const current = images[index];
 
   const clickOverlay = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -354,9 +410,9 @@ function Lightbox({
     <div
       ref={overlayRef}
       onClick={clickOverlay}
-      className="fixed inset-0 z-[90] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4"
-      aria-modal="true"
+      className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4"
       role="dialog"
+      aria-modal="true"
       aria-label="Image lightbox"
     >
       {/* Close */}
@@ -389,17 +445,23 @@ function Lightbox({
         →
       </button>
 
-      <div className="max-w-6xl w-full">
+      {/* Stage */}
+      <div className="max-w-7xl w-full">
         <div className="relative rounded-2xl overflow-hidden bg-white/5 ring-1 ring-white/10">
           <img
             src={current.src}
             alt={current.alt}
-            className="w-full h-auto object-contain max-h-[72vh]"
+            className="w-full h-auto object-contain max-h-[80vh]"
           />
+
+          {/* Caption & counter */}
           <div className="absolute bottom-0 left-0 right-0 p-4">
-            <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/50 via-black/0 to-transparent" />
-            <div className="relative flex items-center justify-between text-sm text-white/85">
-              <span>{current.alt}</span>
+            <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/55 via-black/0 to-transparent" />
+            <div className="relative flex flex-wrap items-center justify-between gap-2 text-sm text-white/85">
+              <span className="truncate">
+                {title ? `${title} — ` : ""}
+                {current.alt}
+              </span>
               <span className="text-white/60">
                 {index + 1} / {images.length}
               </span>
@@ -407,7 +469,7 @@ function Lightbox({
           </div>
         </div>
 
-        {/* Thumbs */}
+        {/* Thumbnails (optional) */}
         <div className="mt-4 hidden md:flex gap-2 overflow-x-auto">
           {images.map((img, i) => (
             <button

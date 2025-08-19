@@ -7,6 +7,7 @@ import HeroSection from "@/components/hero-section";
 import AboutSection from "@/components/about-section";
 import ProjectSections from "@/components/horizontal-scroll-section";
 import BrandsCollaborationSection from "@/components/brands-collaboration-section";
+import SectionReveal from "@/components/SectionReveal";
 import JourneySection from "@/components/journey-section";
 import Footer from "@/components/footer";
 

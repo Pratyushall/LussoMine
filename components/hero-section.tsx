@@ -1,61 +1,52 @@
+// components/HeroSection.tsx
 "use client";
 
 import { useRef } from "react";
+import { Playfair_Display } from "next/font/google";
 import { motion, useScroll, useTransform } from "framer-motion";
 
+const playfair = Playfair_Display({ subsets: ["latin"], display: "swap" });
+
 export default function HeroSection() {
-  const sectionRef = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
-    target: sectionRef,
+    target: ref,
     offset: ["start start", "end start"],
   });
-
-  const y1 = useTransform(scrollYProgress, [0, 1], [0, -100]);
-  const y2 = useTransform(scrollYProgress, [0, 1], [0, -150]);
-  const y3 = useTransform(scrollYProgress, [0, 1], [0, -200]);
-  const y4 = useTransform(scrollYProgress, [0, 1], [0, -250]);
-
-  const textLines = [""];
+  const y1 = useTransform(scrollYProgress, [0, 1], [0, -60]);
+  const y2 = useTransform(scrollYProgress, [0, 1], [0, -100]);
 
   return (
     <section
-      ref={sectionRef}
-      className="relative h-screen overflow-hidden"
-      style={{ backgroundColor: "oklch(71.8% 0.202 349.761)" }}
+      ref={ref}
+      className="relative isolate min-h-[100dvh] overflow-hidden z-[1] kill-overlays"
+      style={{
+        backgroundColor: "fff",
+        backgroundImage: 'url("/images/hero-2.png?v=2")',
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
     >
-      {/* Video Background */}
-      <div className="absolute inset-0 z-0">
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="w-full h-full object-cover"
-          poster="/placeholder.svg?height=1080&width=1920"
-        >
-          <source src="/videos/hero.mp4" type="video/mp4" />
-        </video>
-        <div className="absolute inset-0 bg-slate-900/60" />
-      </div>
+      {/* 👇 Blur overlay */}
+      <div className="absolute inset-0 z-[1]" />
 
-      {/* Animated Text */}
-      <div className="relative z-3  h-full flex items-center justify-center">
-        <div className="text-center space-y-2">
-          {textLines.map((line, index) => (
-            <motion.div
-              key={index}
-              style={{
-                y: index === 0 ? y1 : index === 1 ? y2 : index === 2 ? y3 : y4,
-              }}
-              initial={{ opacity: 0, y: 50 }}
+      <div className="relative z-[2] h-[100dvh] flex items-center justify-center px-6">
+        <div className={`text-center space-y-4 ${playfair.className}`}>
+          {[
+            "Let your space speak in your language...",
+            "The canvas is yours, always!",
+          ].map((line, i) => (
+            <motion.h2
+              key={i}
+              style={{ y: i === 0 ? y1 : y2 }}
+              initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.2, duration: 0.8 }}
-              className="overflow-hidden"
+              transition={{ delay: i * 0.15, duration: 0.7 }}
+              className="text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)] tracking-wide font-normal text-2xl md:text-2xl leading-tight"
             >
-              <h2 className="text-4xl md:text-6xl font-light tracking-wide text-white">
-                {line}
-              </h2>
-            </motion.div>
+              {line}
+            </motion.h2>
           ))}
         </div>
       </div>

@@ -1,58 +1,68 @@
 "use client";
 
 import type React from "react";
-
 import { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import Link from "next/link";
-import Footer from "@/components/footer"; // <-- Footer
+import Footer from "@/components/footer";
+
+/** Reusable blurred background */
+const BlurredBg: React.FC<{ src: string; overlayClass?: string }> = ({
+  src,
+  overlayClass = "bg-[#0a1526]/75",
+}) => (
+  <>
+    <img
+      src={src}
+      alt=""
+      aria-hidden
+      className="absolute inset-0 w-full h-full object-cover blur-md scale-110"
+    />
+    <div className={`absolute inset-0 ${overlayClass}`} aria-hidden />
+  </>
+);
 
 export default function ContactPage() {
   return (
-    <div
-      style={{ backgroundColor: "#0a1526" }}
-      className="min-h-screen relative"
-    >
-      <TopRightMenu /> {/* <-- Menu */}
+    <div className="min-h-screen relative bg-[#0a1526]">
+      <TopRightMenu />
       <ContactHero />
       <ContactFormSection />
       <LocationsSection />
       <ContactInfoSection />
-      <Footer /> {/* <-- Footer at the bottom */}
+      <Footer />
     </div>
   );
 }
 
-/* ────────────────────────────────────────────────────────────
-   Top-right menu (same style as other pages)
-   ──────────────────────────────────────────────────────────── */
+/* ──────────────────────────────────────────────────────────── */
 function TopRightMenu() {
   const [open, setOpen] = useState(false);
   return (
     <div className="fixed top-5 right-5 z-[80]">
       <button
         onClick={() => setOpen((v) => !v)}
-        className="relative px-4 py-2 rounded-full border border-white/20 text-white/90 backdrop-blur-sm
-                   bg-white/5 hover:bg-white/10 transition"
+        className="relative px-4 py-2 rounded-full border border-white/20 text-white/90 backdrop-blur-sm bg-white/5 hover:bg-white/10 transition"
         aria-label="Open menu"
       >
         <span className="inline-flex items-center gap-2">
           <span aria-hidden>☰</span>
-          <span>Menu</span>
         </span>
       </button>
 
       {open && (
-        <nav className="mt-2 w-56 rounded-2xl overflow-hidden border border-white/15 bg-[#0a1526]/95 backdrop-blur-md shadow-xl">
+        <nav
+          className="mt-2 w-56 rounded-2xl overflow-hidden border border-white/15 backdrop-blur-sm shadow-xl"
+          style={{
+            backgroundImage: "url('/images/bg11.jpg')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        >
+          {" "}
           {[
             { label: "Home", href: "/" },
             { label: "Products", href: "/products" },
-            { label: "Kitchens", href: "/kitchens" },
-            { label: "Wardrobes", href: "/wardrobes" },
-            { label: "Shutters", href: "/shutters" },
-            { label: "Partitions", href: "/partitions" },
-            { label: "Experience", href: "/experience" },
-            { label: "Start your vision", href: "/startvision" },
             { label: "About", href: "/about" },
             { label: "Contact", href: "/contact" },
           ].map((item) => (
@@ -79,19 +89,13 @@ function ContactHero() {
     <section
       ref={sectionRef}
       className="min-h-screen relative overflow-hidden flex items-center justify-center pt-20"
+      aria-label="Contact Hero"
     >
-      {/* Animated Background */}
-      <div className="absolute inset-0">
-        <motion.div
-          className="absolute top-20 left-10 w-96 h-96 bg-gradient-to-r from-green-500/10 to-teal-500/10 rounded-full blur-3xl"
-          animate={{ scale: [1, 1.2, 1], rotate: [0, 180, 360] }}
-          transition={{
-            duration: 20,
-            repeat: Number.POSITIVE_INFINITY,
-            ease: "linear",
-          }}
-        />
-      </div>
+      {/* Blurred cinematic background */}
+      <BlurredBg src="/images/wrd11.png" overlayClass="bg-[#0a1526]/70" />
+
+      {/* Optional subtle blob */}
+      <div className="pointer-events-none absolute -top-20 -left-20 w-[40rem] h-[40rem] rounded-full bg-amber-500/10 blur-xs" />
 
       <div className="container mx-auto px-6 text-center relative z-10">
         <motion.div
@@ -108,11 +112,7 @@ function ContactHero() {
                 "0 0 30px rgba(255,255,255,0.1)",
               ],
             }}
-            transition={{
-              duration: 4,
-              repeat: Number.POSITIVE_INFINITY,
-              ease: "easeInOut",
-            }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
           >
             Contact{" "}
             <span className="text-transparent bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 bg-clip-text">
@@ -128,7 +128,7 @@ function ContactHero() {
           />
 
           <motion.p
-            className="text-xl text-white/70 max-w-3xl mx-auto leading-relaxed"
+            className="text-xl text-white/80 max-w-3xl mx-auto leading-relaxed"
             initial={{ opacity: 0, y: 30 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 1, delay: 0.8 }}
@@ -158,15 +158,20 @@ function ContactFormSection() {
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >
-  ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  ) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   return (
-    <section ref={sectionRef} className="py-32 relative overflow-hidden">
+    <section
+      ref={sectionRef}
+      className="py-32 relative overflow-hidden"
+      aria-label="Contact Form"
+    >
+      {/* Blurred cinematic background */}
+      <BlurredBg src="/images/wrd11.png" overlayClass="bg-[#0a1526]/85" />
+
       <div className="container mx-auto px-6 relative z-10">
         <div className="grid lg:grid-cols-2 gap-16">
-          {/* Contact Form */}
+          {/* Form */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
@@ -186,7 +191,7 @@ function ContactFormSection() {
                     name="name"
                     value={formData.name}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:border-green-400 focus:bg-white/15 transition-all duration-300"
+                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:border-amber-400 focus:bg-white/15 transition-all duration-300"
                     placeholder="Enter your full name"
                   />
                 </div>
@@ -199,7 +204,7 @@ function ContactFormSection() {
                     name="email"
                     value={formData.email}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:border-green-400 focus:bg-white/15 transition-all duration-300"
+                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:border-amber-400 focus:bg-white/15 transition-all duration-300"
                     placeholder="your.email@example.com"
                   />
                 </div>
@@ -214,7 +219,7 @@ function ContactFormSection() {
                   name="phone"
                   value={formData.phone}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:border-green-400 focus:bg-white/15 transition-all duration-300"
+                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:border-amber-400 focus:bg-white/15 transition-all duration-300"
                   placeholder="+1 (555) 123-4567"
                 />
               </div>
@@ -228,7 +233,7 @@ function ContactFormSection() {
                     name="projectType"
                     value={formData.projectType}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:border-green-400 focus:bg-white/15 transition-all duration-300"
+                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:border-amber-400 focus:bg-white/15 transition-all duration-300"
                   >
                     <option value="">Select project type</option>
                     <option value="residential">Residential Design</option>
@@ -245,7 +250,7 @@ function ContactFormSection() {
                     name="budget"
                     value={formData.budget}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:border-green-400 focus:bg-white/15 transition-all duration-300"
+                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:border-amber-400 focus:bg-white/15 transition-all duration-300"
                   >
                     <option value="">Select budget range</option>
                     <option value="50k-100k">$50,000 - $100,000</option>
@@ -265,14 +270,14 @@ function ContactFormSection() {
                   value={formData.message}
                   onChange={handleInputChange}
                   rows={5}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:border-green-400 focus:bg-white/15 transition-all duration-300 resize-none"
+                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:border-amber-400 focus:bg-white/15 transition-all duration-300 resize-none"
                   placeholder="Tell us about your project vision, timeline, and any specific requirements..."
                 />
               </div>
 
               <motion.button
                 type="submit"
-                className="w-full py-4 bg-gradient-to-r from-green-500 to-teal-500 text-white rounded-xl font-light tracking-wide hover:shadow-lg hover:shadow-green-500/25 transition-all duration-300"
+                className="w-full py-4 bg-gradient-to-r from-amber-500 to-amber-600 text-black rounded-xl font-light tracking-wide hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
@@ -281,7 +286,7 @@ function ContactFormSection() {
             </form>
           </motion.div>
 
-          {/* Contact Information */}
+          {/* Right column */}
           <motion.div
             className="space-y-8"
             initial={{ opacity: 0, x: 50 }}
@@ -292,17 +297,18 @@ function ContactFormSection() {
               <h3 className="text-2xl font-light text-white mb-6">
                 Let's Create Something Amazing
               </h3>
-              <p className="text-white/70 leading-relaxed mb-8">
+              <p className="text-white/80 leading-relaxed mb-8">
                 Whether you're looking to transform a single room or redesign
                 your entire space, our team is here to guide you through every
                 step of the process.
               </p>
             </div>
 
+            {/* contact blocks unchanged */}
             <div className="space-y-6">
               <div className="flex items-start space-x-4">
-                <div className="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0">
-                  <span className="text-green-400 text-xl">📞</span>
+                <div className="w-12 h-12 rounded-full bg-amber-400/20 flex items-center justify-center flex-shrink-0">
+                  <span className="text-amber-300 text-xl">📞</span>
                 </div>
                 <div>
                   <h4 className="text-white font-light mb-1">Phone</h4>
@@ -312,8 +318,8 @@ function ContactFormSection() {
               </div>
 
               <div className="flex items-start space-x-4">
-                <div className="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0">
-                  <span className="text-green-400 text-xl">📧</span>
+                <div className="w-12 h-12 rounded-full bg-amber-400/20 flex items-center justify-center flex-shrink-0">
+                  <span className="text-amber-300 text-xl">📧</span>
                 </div>
                 <div>
                   <h4 className="text-white font-light mb-1">Email</h4>
@@ -323,8 +329,8 @@ function ContactFormSection() {
               </div>
 
               <div className="flex items-start space-x-4">
-                <div className="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0">
-                  <span className="text-green-400 text-xl">📍</span>
+                <div className="w-12 h-12 rounded-full bg-amber-400/20 flex items-center justify-center flex-shrink-0">
+                  <span className="text-amber-300 text-xl">📍</span>
                 </div>
                 <div>
                   <h4 className="text-white font-light mb-1">Address</h4>
@@ -334,8 +340,8 @@ function ContactFormSection() {
               </div>
 
               <div className="flex items-start space-x-4">
-                <div className="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0">
-                  <span className="text-green-400 text-xl">🕒</span>
+                <div className="w-12 h-12 rounded-full bg-amber-400/20 flex items-center justify-center flex-shrink-0">
+                  <span className="text-amber-300 text-xl">🕒</span>
                 </div>
                 <div>
                   <h4 className="text-white font-light mb-1">Hours</h4>
@@ -365,7 +371,14 @@ function LocationsSection() {
   ];
 
   return (
-    <section ref={sectionRef} className="py-32 relative overflow-hidden">
+    <section
+      ref={sectionRef}
+      className="py-32 relative overflow-hidden"
+      aria-label="Locations"
+    >
+      {/* Blurred cinematic background */}
+      <BlurredBg src="/images/bg11.png" overlayClass="bg-[#0a1526]/18" />
+
       <div className="container mx-auto px-6 relative z-10">
         <motion.div
           className="text-center mb-20"
@@ -374,7 +387,7 @@ function LocationsSection() {
           transition={{ duration: 1 }}
         >
           <h2 className="text-5xl font-light text-white mb-6">Our Locations</h2>
-          <div className="w-24 h-px bg-gradient-to-r from-transparent via-teal-400 to-transparent mx-auto" />
+          <div className="w-24 h-px bg-gradient-to-r from-transparent via-amber-400 to-transparent mx-auto" />
         </motion.div>
 
         <div className="grid md:grid-cols-3 gap-8">
@@ -388,7 +401,7 @@ function LocationsSection() {
             >
               <div className="relative mb-6 rounded-2xl overflow-hidden">
                 <img
-                  src={location.image || "/placeholder.svg"}
+                  src="/images/bg11.png"
                   alt={`${location.city} Office`}
                   className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
                 />
@@ -414,7 +427,14 @@ function ContactInfoSection() {
   const isInView = useInView(sectionRef, { once: true, amount: 0.3 });
 
   return (
-    <section ref={sectionRef} className="py-32 relative overflow-hidden">
+    <section
+      ref={sectionRef}
+      className="py-32 relative overflow-hidden"
+      aria-label="Contact CTA"
+    >
+      {/* Blurred cinematic background */}
+      <BlurredBg src="/images/bg11.png" overlayClass="bg-[#0a1526]/48" />
+
       <div className="container mx-auto px-6 text-center relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
@@ -424,12 +444,12 @@ function ContactInfoSection() {
           <h2 className="text-4xl font-light text-white mb-8">
             Ready to Begin?
           </h2>
-          <p className="text-xl text-white/70 max-w-2xl mx-auto mb-12">
+          <p className="text-xl text-white/80 max-w-2xl mx-auto mb-12">
             Schedule a consultation today and take the first step towards your
             dream interior.
           </p>
           <motion.button
-            className="px-12 py-4 bg-gradient-to-r from-green-500 to-teal-500 text-white rounded-full font-light tracking-wide hover:shadow-lg hover:shadow-green-500/25 transition-all duration-300"
+            className="px-12 py-4 bg-gradient-to-r from-amber-500 to-amber-600 text-black rounded-full font-light tracking-wide hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
