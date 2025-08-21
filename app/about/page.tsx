@@ -195,17 +195,17 @@ function TeamSection() {
     {
       name: "Pranav Kondabathini",
       title: "Founder & Creative Director",
-      image: "/images/prn.png",
+      image: "/images/prnv.jpg",
     },
     {
       name: "Shiva Pranav",
       title: "Head of Design",
-      image: "/images/prn.png",
+      image: "/images/prnv.jpg",
     },
     {
       name: "Pranav",
       title: "Project Director",
-      image: "/images/prn.png",
+      image: "/images/prnv.jpg",
     },
   ];
 
