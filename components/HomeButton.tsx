@@ -20,8 +20,8 @@ export default function HomeButton({
       style={{
         position: "fixed",
         // hard-pin to top-right and reset any legacy positioning
-        top: "max(0.75rem, env(safe-area-inset-top))",
-        left: "max(0.75rem, env(safe-area-inset-right))",
+        top: "max(1.5rem, env(safe-area-inset-top))",
+        left: "max(1.5rem, env(safe-area-inset-right))",
         bottom: "auto",
         right: "auto",
       }}

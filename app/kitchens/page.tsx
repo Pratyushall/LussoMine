@@ -210,9 +210,7 @@ function TypeBlock({
 }
 
 /* ---------------------------------------------
- * FullscreenWoodFrame (single textured brown frame)
- * - Full viewport (100svh/100vw)
- * - Subtle bevel + CSS grain texture
+ * FullscreenWoodFrame (uses your wooden frame image)
  * -------------------------------------------*/
 function FullscreenWoodFrame({
   title,
@@ -223,39 +221,36 @@ function FullscreenWoodFrame({
   images: Tile[];
   intervalMs?: number;
 }) {
-  const FRAME = "clamp(18px, 3vw, 36px)"; // responsive frame thickness
+  // Responsive padding so slides sit *inside* the wood border
+  const FRAME = "clamp(32px, 6vw, 120px)";
 
   return (
-    <div
-      className="relative h-[100svh] w-[100vw] overflow-hidden"
-      style={{
-        background: [
-          "linear-gradient(135deg, #553318, #2b170a)",
-          "repeating-linear-gradient(90deg, rgba(255,255,255,0.05) 0 2px, rgba(0,0,0,0.08) 2px 4px)",
-          "radial-gradient(120% 160% at 0% 0%, rgba(255,255,255,0.06), transparent 55%)",
-          "radial-gradient(130% 170% at 100% 100%, rgba(0,0,0,0.35), transparent 55%)",
-        ].join(","),
-        backgroundBlendMode: "overlay, multiply, normal, normal",
-        boxShadow:
-          "inset 0 2px 0 rgba(255,255,255,0.12), inset 0 -2px 0 rgba(0,0,0,0.45), 0 40px 120px rgba(0,0,0,0.55)",
-        padding: FRAME,
-      }}
-    >
-      <div
-        className="pointer-events-none absolute inset-0"
-        style={{ boxShadow: "inset 0 0 60px rgba(0,0,0,0.35)" }}
+    <div className="relative h-[100svh] w-[100vw] overflow-hidden">
+      {/* Background: wooden frame image */}
+      <Image
+        src="/images/frame5.png" // put frame2.png in /public/images/
+        alt=""
+        fill
+        priority={false}
+        sizes="100vw"
+        className="object-cover object-center"
       />
 
-      {/* Title badge */}
-      <div className="absolute top-15 left-10 z-20">
-        <span className="px-3 py-1 rounded-full text-2xl tracking-wide uppercase text-white/80 bg-white/10 border border-white/20 backdrop-blur-sm">
-          {title}
-        </span>
-      </div>
+      {/* Soft vignette for legibility without hiding the frame */}
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(110%_110%_at_50%_50%,rgba(0,0,0,0.25),rgba(0,0,0,0.6))]" />
 
-      {/* Inner stage */}
-      <div className="relative h-full w-full rounded-[10px] overflow-hidden ring-1 ring-black/20 bg-black/20">
-        <SlideshowCore images={images} intervalMs={intervalMs} />
+      {/* Inner stage: padded area inside the frame */}
+      <div
+        className="relative h-full w-full overflow-hidden"
+        style={{ padding: FRAME }}
+      >
+        <div className="relative h-full w-full rounded-[10px] overflow-hidden ring-1 ring-black/20">
+          <SlideshowCore
+            images={images}
+            intervalMs={intervalMs}
+            hoverLabel={title}
+          />
+        </div>
       </div>
     </div>
   );
@@ -263,18 +258,21 @@ function FullscreenWoodFrame({
 
 /* ---------------------------------------------
  * SlideshowCore
- * - Autoplay (pause on hover), arrows, dots, keyboard, swipe
+ * - Autoplay (pauses while hovering center zone)
+ * - Arrows, dots, keyboard, swipe
+ * - Center hover overlay shows the type label
  * -------------------------------------------*/
 function SlideshowCore({
   images,
   intervalMs = 5000,
+  hoverLabel,
 }: {
   images: Tile[];
   intervalMs?: number;
+  hoverLabel: string;
 }) {
   const [idx, setIdx] = useState(0);
-  const [paused, setPaused] = useState(false);
-  const timerRef = useRef<number | null>(null);
+  const [hoveringCenter, setHoveringCenter] = useState(false);
   const touchStartX = useRef<number | null>(null);
 
   const next = () => setIdx((i) => (i + 1) % images.length);
@@ -305,11 +303,15 @@ function SlideshowCore({
     touchStartX.current = null;
   };
 
+  // Touch to show label briefly
+  const onCenterTouch = () => {
+    setHoveringCenter(true);
+    window.setTimeout(() => setHoveringCenter(false), 1200);
+  };
+
   return (
     <div
       className="relative h-full w-full"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
     >
@@ -338,16 +340,32 @@ function SlideshowCore({
               />
               {/* Vignettes */}
               <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/45 via-black/10 to-transparent" />
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/20" />
-              {/* Caption */}
-              <div className="absolute bottom-0 left-0 right-0 p-5 md:p-8">
-                <p className="text-white/90 text-sm md:text-base drop-shadow-[0_1px_1px_rgba(0,0,0,0.6)]">
-                  {img.alt}
-                </p>
-              </div>
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/35 via-transparent to-black/20" />
             </div>
           );
         })}
+      </div>
+
+      {/* Center hover sensor (only middle area shows the label) */}
+      <div
+        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-3/5 h-3/5 max-w-[640px] max-h-[60vh] z-20"
+        onMouseEnter={() => setHoveringCenter(true)}
+        onMouseLeave={() => setHoveringCenter(false)}
+        onTouchStart={onCenterTouch}
+      >
+        {/* Center hover label */}
+        <div
+          className={`pointer-events-none absolute inset-0 flex items-center justify-center transition-opacity duration-300 ${
+            hoveringCenter ? "opacity-100" : "opacity-0"
+          }`}
+          aria-hidden={!hoveringCenter}
+        >
+          <div className="px-6 py-3 rounded-full bg-black/35 border border-white/20 backdrop-blur-sm">
+            <span className="text-white/90 text-xl md:text-2xl tracking-wide uppercase">
+              {hoverLabel}
+            </span>
+          </div>
+        </div>
       </div>
 
       {/* Arrows */}
@@ -355,7 +373,7 @@ function SlideshowCore({
         onClick={prev}
         aria-label="Previous slide"
         className="absolute left-4 md:left-6 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white/10 border border-white/20
-                   text-white/90 hover:bg-white/20 transition flex items-center justify-center z-10"
+                   text-white/90 hover:bg-white/20 transition flex items-center justify-center z-30"
       >
         ←
       </button>
@@ -363,13 +381,13 @@ function SlideshowCore({
         onClick={next}
         aria-label="Next slide"
         className="absolute right-4 md:right-6 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white/10 border border-white/20
-                   text-white/90 hover:bg-white/20 transition flex items-center justify-center z-10"
+                   text-white/90 hover:bg-white/20 transition flex items-center justify-center z-30"
       >
         →
       </button>
 
       {/* Dots */}
-      <div className="absolute bottom-4 left-0 right-0 flex items-center justify-center gap-2 z-10">
+      <div className="absolute bottom-4 left-0 right-0 flex items-center justify-center gap-2 z-30">
         {images.map((_, i) => (
           <button
             key={`dot-${i}`}

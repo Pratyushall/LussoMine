@@ -1,233 +1,178 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
-import { motion, useInView, AnimatePresence } from "framer-motion";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 
-type Brand = {
-  name: string;
-  logo: string;
-};
+type Brand = { name: string; logo: string };
+
+const BRANDS: Brand[] = [
+  { name: "Blum", logo: "/images/blum.png" },
+  { name: "Aristo", logo: "/images/aristo.png" },
+  { name: "Casantro", logo: "/images/casantro.jpeg" },
+  { name: "Häfele", logo: "/images/hafele.png" },
+  { name: "Hettich", logo: "/images/hettich.png" },
+  { name: "Kesseböhmer", logo: "/images/kessebohmer.png" },
+  { name: "Indoline", logo: "/images/indoline.png" },
+  { name: "Liebherr", logo: "/images/liebherr.png" },
+  { name: "Makwana", logo: "/images/makwana.png" },
+  { name: "Navaki", logo: "/images/navaki.png" },
+  { name: "Quantra Quartz", logo: "/images/quantra.png" },
+  { name: "Salice", logo: "/images/salice.png" },
+  { name: "Bosch", logo: "/images/bosch.png" },
+  { name: "Siemens", logo: "/images/siemens.png" },
+  { name: "Grayzo", logo: "/images/grayzo.png" },
+  { name: "Forever", logo: "/images/forever.png" },
+  { name: "Dyson", logo: "/images/dyson.png" },
+  { name: "ceasertone", logo: "/images/ceaserstone.png" }, // ← ensure this filename is correct
+  { name: "Wesmark", logo: "/images/wesmark.png" },
+];
 
 export default function BrandsCollaborationSection() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.25 });
-
-  const brands: Brand[] = [
-    { name: "Blum", logo: "/images/blum.png" },
-    { name: "Aristo", logo: "/images/aristo.png" },
-    { name: "Casantro", logo: "/images/casantro.jpeg" },
-    { name: "Häfele", logo: "/images/hafele.png" },
-    { name: "Hettich", logo: "/images/hettich.png" },
-    { name: "Kesseböhmer", logo: "/images/kessebohmer.png" },
-    { name: "Indoline", logo: "/images/indoline.png" },
-    { name: "Liebherr", logo: "/images/liebherr.png" },
-    { name: "Makwana", logo: "/images/makwana.png" },
-    { name: "Navaki", logo: "/images/navaki.png" },
-    { name: "Quantra Quartz", logo: "/images/quantra.png" },
-    { name: "Salice", logo: "/images/salice.png" },
-    { name: "Bosch", logo: "/images/bosch.png" },
-    { name: "Siemens", logo: "/images/siemens.png" },
-    { name: "Grayzo", logo: "/images/grayzo.png" },
-    { name: "Forever", logo: "/images/forever.png" },
-    { name: "Dyson", logo: "/images/dyson.png" },
-    { name: "ceasertone", logo: "/images/ceaserstone.png" },
-    { name: "Wesmark", logo: "/images/wesmark.png" },
-  ];
-
-  const primary = brands.slice(0, 7);
-  const more = brands.slice(7);
-
-  const [open, setOpen] = useState(false);
-
+  const [reduced, setReduced] = useState(false);
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReduced(mq.matches);
+    const onChange = (e: MediaQueryListEvent) => setReduced(e.matches);
+    mq.addEventListener?.("change", onChange);
+    return () => mq.removeEventListener?.("change", onChange);
   }, []);
+
+  // duplicate for seamless loop
+  const lane = useMemo(() => [...BRANDS, ...BRANDS], []);
 
   return (
     <section
-      ref={sectionRef}
-      className="py-16 md:py-20"
+      aria-label="Key Collaborations"
+      className="relative py-10 md:py-14"
       style={{ backgroundColor: "#0a1526" }}
     >
-      {/* Background image */}
-      <Image
-        src="/images/bg11.png" // 👉 replace with your image path
-        alt="Background"
-        fill
-        priority
-        className="object-cover scale-110 blur-lg"
-      />
-      {/* Dark overlay for readability */}
-      <div className="absolute inset-0 bg-[#0a1526]/80" />
-      {/* Content */}
-      <div className="relative z-10 max-w-5xl mx-auto px-6">
-        {/* Header */}
-        <motion.div
-          className="text-center mb-10 md:mb-14"
-          initial={{ opacity: 0, y: 24 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-        >
-          <h2 className="text-3xl md:text-4xl font-light text-amber-300">
-            Key Collaborations
-          </h2>
-          <div className="w-16 h-px bg-amber-400/60 mx-auto my-4" />
-          <p className="text-base md:text-lg text-gray-300">
-            Born from your vision, built by us.
-          </p>
-        </motion.div>
+      <div className="text-center px-4 mb-6 md:mb-8">
+        <h2 className="text-2xl md:text-3xl font-light text-white">
+          Key Collaborations
+        </h2>
+        <div className="w-16 h-px bg-amber-400/70 mx-auto mt-3" />
+      </div>
 
-        {/* 7 brands + “Many more” */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-          {primary.map((b, idx) => (
-            <motion.div
-              key={b.name}
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              whileHover={{ rotate: 360 }}
-              transition={{ duration: 1.2, ease: "easeInOut" }}
-              className="rounded-xl border border-amber-200/30 
-                         bg-gradient-to-br from-[#3f6096] to-[#eaecee] 
-                         hover:from-[#6282b5] hover:to-[#6a8ac3] 
-                         transition-colors will-change-transform"
-            >
-              <div className="aspect-[4/3] flex items-center justify-center p-4">
-                <Image
-                  src={b.logo}
-                  alt={`${b.name} logo`}
-                  width={220}
-                  height={130}
-                  className="max-h-16 w-auto opacity-95"
-                />
-              </div>
-              <div className="px-4 pb-4 text-center">
-                <p className="text-sm text-white/90">{b.name}</p>
-              </div>
-            </motion.div>
-          ))}
+      {/* FULL-BLEED WHITE RIBBON */}
+      <div className="w-screen max-w-[100vw] mx-[calc(50%-50vw)] relative">
+        {/* Ribbon */}
+        <div className="relative h-[220px] md:h-[240px] bg-white">
+          {/* soft lift */}
+          <div className="pointer-events-none absolute inset-x-0 -top-4 h-4 bg-gradient-to-b from-black/15 to-transparent" />
+          <div className="pointer-events-none absolute inset-x-0 -bottom-4 h-4 bg-gradient-to-t from-black/15 to-transparent" />
 
-          {/* Many More card */}
-          <motion.button
-            type="button"
-            onClick={() => setOpen(true)}
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.45, delay: 7 * 0.05 }}
-            className="rounded-xl border border-amber-200/30 
-                       bg-gradient-to-br from-[#3f6096]/30 to-[#eaecee]/30 
-                       hover:from-[#6282b5]/50 hover:to-[#2f4063]/50 
-                       transition-colors relative group overflow-hidden"
-            aria-haspopup="dialog"
-            aria-expanded={open}
-          >
-            <div className="aspect-[4/3] flex flex-col items-center justify-center gap-2">
-              <motion.div
-                initial={{ scale: 0.95 }}
-                animate={{ scale: [0.95, 1, 0.95] }}
-                transition={{ duration: 1.6, repeat: Infinity }}
-                className="w-8 h-8 relative"
+          {/* Lanes (above ribbon) */}
+          <div className="absolute inset-0 overflow-hidden z-10">
+            {/* Lane 1: left -> right */}
+            <div className="absolute top-[25%] -translate-y-1/2 left-0 right-0">
+              <div
+                className="flex items-center gap-5 md:gap-8 w-[200%]"
+                style={{
+                  transform: "translateX(0)",
+                  animation: reduced
+                    ? undefined
+                    : "reel-left 48s linear infinite",
+                }}
               >
-                <span className="absolute inset-0 rounded-full border border-amber-300/40" />
-                <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-5 h-px bg-amber-300" />
-                <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-5 w-px bg-amber-300" />
-              </motion.div>
-              <span className="text-base font-medium text-white">
-                Many more
-              </span>
-              <span className="text-xs text-white/80">Tap to view</span>
+                {lane.map((b, i) => (
+                  <LogoPill
+                    key={`l1-${b.name}-${i}`}
+                    name={b.name}
+                    logo={b.logo}
+                    priority={i < 8}
+                  />
+                ))}
+              </div>
             </div>
-          </motion.button>
-        </div>
 
-        {/* CTA */}
-        <div className="text-center mt-12">
-          <Link
-            href="/startvision"
-            className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-medium
-                       bg-amber-500/90 text-black hover:bg-amber-400 transition-colors"
-          >
-            Start Your Vision →
-          </Link>
+            {/* Lane 2: right -> left */}
+            <div className="absolute bottom-[25%] translate-y-1/2 left-0 right-0">
+              <div
+                className="flex items-center gap-5 md:gap-8 w-[200%] justify-end"
+                style={{
+                  transform: "translateX(-50%)",
+                  animation: reduced
+                    ? undefined
+                    : "reel-right 50s linear infinite",
+                }}
+              >
+                {lane.map((b, i) => (
+                  <LogoPill
+                    key={`l2-${b.name}-${i}`}
+                    name={b.name}
+                    logo={b.logo}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Dialog for remaining brands */}
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            role="dialog"
-            aria-modal="true"
-            aria-label="More brand collaborations"
-            className="fixed inset-0 z-50 flex items-center justify-center p-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            {/* Backdrop */}
-            <motion.div
-              className="absolute inset-0 bg-black/60"
-              onClick={() => setOpen(false)}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            />
-            {/* Panel */}
-            <motion.div
-              className="relative z-10 w-full max-w-4xl rounded-2xl border border-white/10 
-                         bg-[#0f1b2f] p-6 shadow-xl max-h-[80vh] overflow-y-auto 
-                         scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent"
-              initial={{ scale: 0.96, y: 8, opacity: 0 }}
-              animate={{ scale: 1, y: 0, opacity: 1 }}
-              exit={{ scale: 0.96, y: 8, opacity: 0 }}
-              transition={{ duration: 0.18 }}
-            >
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-medium text-white">
-                  More Collaborations
-                </h3>
-                <button
-                  onClick={() => setOpen(false)}
-                  className="text-sm text-gray-300 hover:text-white px-3 py-1 rounded-md hover:bg-white/10"
-                >
-                  Close
-                </button>
-              </div>
+      <p className="mt-8 text-center text-white/70 text-xl md:text-base px-10">
+        Partnerships that ensure precision, durability, and quiet luxury.
+      </p>
 
-              {/* Grid of remaining brands */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                {more.map((b) => (
-                  <motion.div
-                    key={b.name}
-                    whileHover={{ rotate: 360 }}
-                    transition={{ duration: 1.2, ease: "easeInOut" }}
-                    className="rounded-xl border border-amber-200/30 
-                               bg-gradient-to-br from-[#3f6096]/30 to-[#eaecee]/30 
-                               hover:from-[#6282b5]/50 hover:to-[#2f3000]/50 
-                               transition-colors relative group overflow-hidden will-change-transform"
-                  >
-                    <div className="aspect-[4/3] flex items-center justify-center p-3">
-                      <Image
-                        src={b.logo}
-                        alt={`${b.name} logo`}
-                        width={180}
-                        height={110}
-                        className="max-h-12 w-auto opacity-95"
-                      />
-                    </div>
-                    <div className="px-3 pb-3 text-center">
-                      <p className="text-xs text-white/90">{b.name}</p>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Global keyframes */}
+      <style jsx global>{`
+        @keyframes reel-left {
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(-50%);
+          }
+        }
+        @keyframes reel-right {
+          0% {
+            transform: translateX(-50%);
+          }
+          100% {
+            transform: translateX(0);
+          }
+        }
+      `}</style>
     </section>
+  );
+}
+
+function LogoPill({
+  name,
+  logo,
+  priority,
+}: {
+  name: string;
+  logo: string;
+  priority?: boolean;
+}) {
+  return (
+    <div className="h-[100px] md:h-[84px] flex items-center justify-center">
+      <div
+        className="
+          flex items-center justify-center
+          h-[70px] md:h-[92px] min-w-[125px] md:min-w-[150px]
+          px-8 md:px-10
+          rounded-2xl
+          bg-[#edeef0]
+          border border-black/5
+          shadow-[inset_0_0_0_1px_rgba(255,255,255,0.6)]
+        "
+      >
+        <Image
+          src={logo}
+          alt={`${name} logo`}
+          height={200}
+          width={160}
+          className="
+            object-contain h-8 md:h-10 w-auto
+            opacity-95
+            drop-shadow-[0_0_1px_rgba(0,0,0,0.25)]
+            contrast-125
+          "
+          sizes="(max-width: 768px) 25vw, (max-width: 1280px) 15vw, 12vw"
+          priority={priority}
+        />
+      </div>
+    </div>
   );
 }

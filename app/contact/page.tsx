@@ -28,7 +28,6 @@ export default function ContactPage() {
       <TopRightMenu />
       <ContactHero />
       <ContactFormSection />
-      <LocationsSection />
       <ContactInfoSection />
       <Footer />
     </div>
@@ -59,7 +58,6 @@ function TopRightMenu() {
             backgroundPosition: "center",
           }}
         >
-          {" "}
           {[
             { label: "Home", href: "/" },
             { label: "Products", href: "/products" },
@@ -81,6 +79,7 @@ function TopRightMenu() {
   );
 }
 
+/* ──────────────────────────────────────────────────────────── */
 function ContactHero() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.3 });
@@ -88,14 +87,10 @@ function ContactHero() {
   return (
     <section
       ref={sectionRef}
-      className="min-h-screen relative overflow-hidden flex items-center justify-center pt-20"
+      className="min-h-[100svh] relative overflow-hidden flex items-center justify-center pt-20"
       aria-label="Contact Hero"
     >
-      {/* Blurred cinematic background */}
       <BlurredBg src="/images/wrd11.png" overlayClass="bg-[#0a1526]/70" />
-
-      {/* Optional subtle blob */}
-      <div className="pointer-events-none absolute -top-20 -left-20 w-[40rem] h-[40rem] rounded-full bg-amber-500/10 blur-xs" />
 
       <div className="container mx-auto px-6 text-center relative z-10">
         <motion.div
@@ -142,16 +137,25 @@ function ContactHero() {
   );
 }
 
+/* ──────────────────────────────────────────────────────────── */
+/* FULL-SCREEN: segmented toggle + neatly centered form card */
 function ContactFormSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.3 });
+
+  type Audience = "homeowner" | "partner";
+  const [audience, setAudience] = useState<Audience>("homeowner");
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
+    message: "",
     projectType: "",
     budget: "",
-    message: "",
+    company: "",
+    partnership: "",
+    website: "",
   });
 
   const handleInputChange = (
@@ -163,42 +167,78 @@ function ContactFormSection() {
   return (
     <section
       ref={sectionRef}
-      className="py-32 relative overflow-hidden"
+      className="min-h-[100svh] relative overflow-hidden flex items-center"
       aria-label="Contact Form"
     >
-      {/* Blurred cinematic background */}
-      <BlurredBg src="/images/wrd11.png" overlayClass="bg-[#0a1526]/85" />
+      <BlurredBg src="/images/wrd11.png" overlayClass="bg-[#0a1526]/82" />
 
-      <div className="container mx-auto px-6 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-16">
-          {/* Form */}
+      <div className="container mx-auto px-6 relative z-10 w-full">
+        <div className="max-w-4xl mx-auto">
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 1 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6 }}
+            className="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm p-6 md:p-8 shadow-[0_10px_40px_rgba(0,0,0,0.35)]"
           >
-            <h2 className="text-4xl font-light text-white mb-8">
-              Get In Touch
-            </h2>
-            <form className="space-y-6">
+            {/* Segmented toggle (Lusso colors, no emojis) */}
+            <div className="mb-8">
+              <div className="grid grid-cols-2 rounded-2xl overflow-hidden border border-white/20">
+                <button
+                  type="button"
+                  onClick={() => setAudience("homeowner")}
+                  aria-pressed={audience === "homeowner"}
+                  className={`py-4 md:py-5 text-base md:text-lg font-medium tracking-wide transition-all
+                    ${
+                      audience === "homeowner"
+                        ? "bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 text-[#0a1526] shadow-inner"
+                        : "bg-white text-[#0a1526]"
+                    } 
+                  `}
+                >
+                  Are you a home owner?
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setAudience("partner")}
+                  aria-pressed={audience === "partner"}
+                  className={`py-4 md:py-5 text-base md:text-lg font-medium tracking-wide transition-all
+                    ${
+                      audience === "partner"
+                        ? "bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 text-[#0a1526] shadow-inner"
+                        : "bg-[#1f2737] text-white"
+                    } 
+                  `}
+                >
+                  Partner with us
+                </button>
+              </div>
+            </div>
+
+            {/* Form */}
+            <motion.form
+              className="space-y-6"
+              initial={{ opacity: 0, y: 30 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.9, delay: 0.15 }}
+            >
               <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-white/80 text-sm font-light mb-2">
-                    Full Name
-                  </label>
+                <Field
+                  label={audience === "partner" ? "Contact Name" : "Full Name"}
+                >
                   <input
                     type="text"
                     name="name"
                     value={formData.name}
                     onChange={handleInputChange}
                     className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:border-amber-400 focus:bg-white/15 transition-all duration-300"
-                    placeholder="Enter your full name"
+                    placeholder={
+                      audience === "partner"
+                        ? "Your name"
+                        : "Enter your full name"
+                    }
                   />
-                </div>
-                <div>
-                  <label className="block text-white/80 text-sm font-light mb-2">
-                    Email Address
-                  </label>
+                </Field>
+                <Field label="Email Address">
                   <input
                     type="email"
                     name="email"
@@ -207,45 +247,52 @@ function ContactFormSection() {
                     className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:border-amber-400 focus:bg-white/15 transition-all duration-300"
                     placeholder="your.email@example.com"
                   />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-white/80 text-sm font-light mb-2">
-                  Phone Number
-                </label>
-                <input
-                  type="tel"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:border-amber-400 focus:bg-white/15 transition-all duration-300"
-                  placeholder="+1 (555) 123-4567"
-                />
+                </Field>
               </div>
 
               <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-white/80 text-sm font-light mb-2">
-                    Project Type
-                  </label>
-                  <select
-                    name="projectType"
-                    value={formData.projectType}
+                <Field label="Phone Number">
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={formData.phone}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:border-amber-400 focus:bg-white/15 transition-all duration-300"
-                  >
-                    <option value="">Select project type</option>
-                    <option value="residential">Residential Design</option>
-                    <option value="commercial">Commercial Design</option>
-                    <option value="renovation">Renovation</option>
-                    <option value="consultation">Design Consultation</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-white/80 text-sm font-light mb-2">
-                    Budget Range
-                  </label>
+                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:border-amber-400 focus:bg-white/15 transition-all duration-300"
+                    placeholder="+91 9XXXX XXXXX"
+                  />
+                </Field>
+
+                {audience === "homeowner" ? (
+                  <Field label="Project Type">
+                    <select
+                      name="projectType"
+                      value={formData.projectType}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:border-amber-400 focus:bg-white/15 transition-all duration-300"
+                    >
+                      <option value="">Select project type</option>
+                      <option value="kitchen">Kitchen</option>
+                      <option value="wardrobe">Wardrobe</option>
+                      <option value="interiors">Full Interiors</option>
+                      <option value="renovation">Renovation</option>
+                    </select>
+                  </Field>
+                ) : (
+                  <Field label="Company">
+                    <input
+                      type="text"
+                      name="company"
+                      value={formData.company}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:border-amber-400 focus:bg-white/15 transition-all duration-300"
+                      placeholder="Company / Studio name"
+                    />
+                  </Field>
+                )}
+              </div>
+
+              {audience === "homeowner" ? (
+                <Field label="Budget Range">
                   <select
                     name="budget"
                     value={formData.budget}
@@ -253,103 +300,84 @@ function ContactFormSection() {
                     className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:border-amber-400 focus:bg-white/15 transition-all duration-300"
                   >
                     <option value="">Select budget range</option>
-                    <option value="50k-100k">$50,000 - $100,000</option>
-                    <option value="100k-250k">$100,000 - $250,000</option>
-                    <option value="250k-500k">$250,000 - $500,000</option>
-                    <option value="500k+">$500,000+</option>
+                    <option value="5-10">₹5L – ₹10L</option>
+                    <option value="10-25">₹10L – ₹25L</option>
+                    <option value="25-50">₹25L – ₹50L</option>
+                    <option value="50+">₹50L+</option>
                   </select>
+                </Field>
+              ) : (
+                <div className="grid md:grid-cols-2 gap-6">
+                  <Field label="Partnership Type">
+                    <select
+                      name="partnership"
+                      value={formData.partnership}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:border-amber-400 focus:bg-white/15 transition-all duration-300"
+                    >
+                      <option value="">Choose one</option>
+                      <option value="architect">Architect</option>
+                      <option value="interior-designer">
+                        Interior Designer
+                      </option>
+                      <option value="builder">Builder / Developer</option>
+                      <option value="supplier">Supplier</option>
+                      <option value="dealer">Dealer</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </Field>
+                  <Field label="Role / Website (optional)">
+                    <input
+                      type="text"
+                      name="website"
+                      value={formData.website}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:border-amber-400 focus:bg-white/15 transition-all duration-300"
+                      placeholder="e.g., Principal Architect / https://…"
+                    />
+                  </Field>
                 </div>
-              </div>
+              )}
 
-              <div>
-                <label className="block text-white/80 text-sm font-light mb-2">
-                  Project Details
-                </label>
+              <Field
+                label={
+                  audience === "partner"
+                    ? "How can we collaborate?"
+                    : "Project Details"
+                }
+              >
                 <textarea
                   name="message"
                   value={formData.message}
                   onChange={handleInputChange}
                   rows={5}
                   className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:border-amber-400 focus:bg-white/15 transition-all duration-300 resize-none"
-                  placeholder="Tell us about your project vision, timeline, and any specific requirements..."
+                  placeholder={
+                    audience === "partner"
+                      ? "Tell us about your firm, region, typical project sizes, and what you’re looking for."
+                      : "Tell us about your vision, timeline, and any specific requirements…"
+                  }
                 />
+              </Field>
+
+              {/* Submit — centered, not touching edges */}
+              <div className="pt-2 flex justify-center">
+                <motion.button
+                  type="submit"
+                  className="px-10 sm:px-12 py-4 rounded-full
+                             bg-gradient-to-r from-amber-500 to-amber-600
+                             text-black font-light tracking-wide
+                             shadow-[0_8px_24px_rgba(251,191,36,0.25)]
+                             hover:shadow-[0_12px_36px_rgba(251,191,36,0.35)]
+                             transition-all duration-300
+                             w-full sm:w-auto sm:min-w-[220px] mx-auto"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  Send Message
+                </motion.button>
               </div>
-
-              <motion.button
-                type="submit"
-                className="w-full py-4 bg-gradient-to-r from-amber-500 to-amber-600 text-black rounded-xl font-light tracking-wide hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                Send Message
-              </motion.button>
-            </form>
-          </motion.div>
-
-          {/* Right column */}
-          <motion.div
-            className="space-y-8"
-            initial={{ opacity: 0, x: 50 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 1, delay: 0.3 }}
-          >
-            <div>
-              <h3 className="text-2xl font-light text-white mb-6">
-                Let's Create Something Amazing
-              </h3>
-              <p className="text-white/80 leading-relaxed mb-8">
-                Whether you're looking to transform a single room or redesign
-                your entire space, our team is here to guide you through every
-                step of the process.
-              </p>
-            </div>
-
-            {/* contact blocks unchanged */}
-            <div className="space-y-6">
-              <div className="flex items-start space-x-4">
-                <div className="w-12 h-12 rounded-full bg-amber-400/20 flex items-center justify-center flex-shrink-0">
-                  <span className="text-amber-300 text-xl">📞</span>
-                </div>
-                <div>
-                  <h4 className="text-white font-light mb-1">Phone</h4>
-                  <p className="text-white/70">+919497567844-LUSSO</p>
-                  <p className="text-white/70">+918456789011</p>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-4">
-                <div className="w-12 h-12 rounded-full bg-amber-400/20 flex items-center justify-center flex-shrink-0">
-                  <span className="text-amber-300 text-xl">📧</span>
-                </div>
-                <div>
-                  <h4 className="text-white font-light mb-1">Email</h4>
-                  <p className="text-white/70">hello@lusso.com</p>
-                  <p className="text-white/70">projects@lusso.com</p>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-4">
-                <div className="w-12 h-12 rounded-full bg-amber-400/20 flex items-center justify-center flex-shrink-0">
-                  <span className="text-amber-300 text-xl">📍</span>
-                </div>
-                <div>
-                  <h4 className="text-white font-light mb-1">Address</h4>
-                  <p className="text-white/70">123 Lusso</p>
-                  <p className="text-white/70">Banjara Hills, Hyderabad</p>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-4">
-                <div className="w-12 h-12 rounded-full bg-amber-400/20 flex items-center justify-center flex-shrink-0">
-                  <span className="text-amber-300 text-xl">🕒</span>
-                </div>
-                <div>
-                  <h4 className="text-white font-light mb-1">Hours</h4>
-                  <p className="text-white/70">Mon-Fri: 9:00 AM - 7:00 PM</p>
-                  <p className="text-white/70">Sat-Sun: 10:00 AM - 6:00 PM</p>
-                </div>
-              </div>
-            </div>
+            </motion.form>
           </motion.div>
         </div>
       </div>
@@ -357,71 +385,8 @@ function ContactFormSection() {
   );
 }
 
-function LocationsSection() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.3 });
-
-  const locations = [
-    {
-      city: "Hyderabad",
-      address: "Banjara Hills, Hyderabad",
-      phone: "+919497567844-LUSSO",
-      image: "/placeholder.svg?height=300&width=400&text=Hyderabad+Studio",
-    },
-  ];
-
-  return (
-    <section
-      ref={sectionRef}
-      className="py-32 relative overflow-hidden"
-      aria-label="Locations"
-    >
-      {/* Blurred cinematic background */}
-      <BlurredBg src="/images/bg11.png" overlayClass="bg-[#0a1526]/18" />
-
-      <div className="container mx-auto px-6 relative z-10">
-        <motion.div
-          className="text-center mb-20"
-          initial={{ opacity: 0, y: 50 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 1 }}
-        >
-          <h2 className="text-5xl font-light text-white mb-6">Our Locations</h2>
-          <div className="w-24 h-px bg-gradient-to-r from-transparent via-amber-400 to-transparent mx-auto" />
-        </motion.div>
-
-        <div className="grid md:grid-cols-3 gap-8">
-          {locations.map((location, index) => (
-            <motion.div
-              key={index}
-              className="group"
-              initial={{ opacity: 0, y: 50 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: index * 0.2 }}
-            >
-              <div className="relative mb-6 rounded-2xl overflow-hidden">
-                <img
-                  src="/images/bg11.png"
-                  alt={`${location.city} Office`}
-                  className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-              </div>
-              <h3 className="text-2xl font-light text-white mb-4">
-                {location.city}
-              </h3>
-              <div className="space-y-2 text-white/70">
-                <p>{location.address}</p>
-                <p>{location.phone}</p>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
+/* ──────────────────────────────────────────────────────────── */
+/* FULL-SCREEN: centered, uniform contact cards with tidy alignment */
 function ContactInfoSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.3 });
@@ -429,34 +394,140 @@ function ContactInfoSection() {
   return (
     <section
       ref={sectionRef}
-      className="py-32 relative overflow-hidden"
-      aria-label="Contact CTA"
+      className="min-h-[100svh] relative overflow-hidden flex items-center"
+      aria-label="Contact Details"
     >
-      {/* Blurred cinematic background */}
       <BlurredBg src="/images/bg11.png" overlayClass="bg-[#0a1526]/48" />
 
-      <div className="container mx-auto px-6 text-center relative z-10">
+      <div className="container mx-auto px-6 relative z-10">
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
+          initial={{ opacity: 0, y: 40 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 1 }}
+          transition={{ duration: 0.9 }}
+          className="max-w-6xl mx-auto"
         >
-          <h2 className="text-4xl font-light text-white mb-8">
-            Ready to Begin?
+          <h2 className="text-4xl font-light text-white text-center mb-10">
+            Contact Information
           </h2>
-          <p className="text-xl text-white/80 max-w-2xl mx-auto mb-12">
-            Schedule a consultation today and take the first step towards your
-            dream interior.
-          </p>
-          <motion.button
-            className="px-12 py-4 bg-gradient-to-r from-amber-500 to-amber-600 text-black rounded-full font-light tracking-wide hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            Schedule Consultation
-          </motion.button>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <InfoCard
+              title="Phone"
+              lines={["+919497567844-LUSSO", "+918456789011"]}
+              svg={
+                <svg viewBox="0 0 24 24" className="w-7 h-7" fill="none">
+                  <path
+                    d="M6 3h4l2 5-3 2a12 12 0 006 6l2-3 5 2v4a2 2 0 01-2 2A17 17 0 013 8a2 2 0 012-2z"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                  />
+                </svg>
+              }
+            />
+            <InfoCard
+              title="Email"
+              lines={["hello@lusso.com", "projects@lusso.com"]}
+              svg={
+                <svg viewBox="0 0 24 24" className="w-7 h-7" fill="none">
+                  <path
+                    d="M4 6h16v12H4z"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                  />
+                  <path
+                    d="M4 7l8 6 8-6"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                  />
+                </svg>
+              }
+            />
+            <InfoCard
+              title="Address"
+              lines={["123 Lusso", "Banjara Hills, Hyderabad"]}
+              svg={
+                <svg viewBox="0 0 24 24" className="w-7 h-7" fill="none">
+                  <path
+                    d="M12 21s7-5.33 7-10a7 7 0 10-14 0c0 4.67 7 10 7 10z"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                  />
+                  <circle
+                    cx="12"
+                    cy="11"
+                    r="2"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                  />
+                </svg>
+              }
+            />
+            <InfoCard
+              title="Hours"
+              lines={[
+                "Mon–Fri: 9:00 AM – 7:00 PM",
+                "Sat–Sun: 10:00 AM – 6:00 PM",
+              ]}
+              svg={
+                <svg viewBox="0 0 24 24" className="w-7 h-7" fill="none">
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="9"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                  />
+                  <path
+                    d="M12 7v5l4 2"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                  />
+                </svg>
+              }
+            />
+          </div>
         </motion.div>
       </div>
     </section>
+  );
+}
+
+/* ───────────────────── helpers ───────────────────── */
+function Field({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div>
+      <label className="block text-white/80 text-sm font-light mb-2">
+        {label}
+      </label>
+      {children}
+    </div>
+  );
+}
+
+function InfoCard({
+  title,
+  lines,
+  svg,
+}: {
+  title: string;
+  lines: string[];
+  svg: React.ReactNode;
+}) {
+  return (
+    <div className="h-full rounded-2xl border border-white/10 bg-white/5 p-6 text-center flex flex-col items-center justify-center gap-3">
+      <div className="text-amber-300/90">{svg}</div>
+      <h4 className="text-white font-light">{title}</h4>
+      <div className="text-white/75 text-sm leading-relaxed">
+        {lines.map((l, i) => (
+          <div key={i}>{l}</div>
+        ))}
+      </div>
+    </div>
   );
 }
